@@ -26,6 +26,22 @@ typedef enum _WIFI_POWER_STATE_{
 
 }wifi_power_state;
 
+typedef enum{
+
+	 DRY_ON = 0x40,
+	 DRY_OFF = 0x41,
+
+	 PLASMA_ON = 0x20,
+	 PLASMA_OFF = 0x21,
+
+	 FAN_ON =0x10,
+	 FAN_OFF = 0x11
+
+
+
+}works_t;
+
+
 extern void (*single_ai_fun)(uint8_t cmd);
 extern void (*single_add_fun)(void);
 extern void (*sendAi_usart_fun)(uint8_t senddat);

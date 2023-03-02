@@ -466,7 +466,7 @@ void RunPocess_Command_Handler(void)
 	  
 				run_t.gDry = 0;
 
-		        SendData_Set_Command(0x02); //PTC turn off
+		        SendData_Set_Command(DRY_OFF); //PTC turn off
 			    //sendAi_usart_fun(0x91);//dry turn off;//turn off PTC "heat"
 			    
                 
@@ -474,7 +474,7 @@ void RunPocess_Command_Handler(void)
 		  else if((run_t.wifi_set_temperature -3) > run_t.gReal_humtemp[1] ||  run_t.gReal_humtemp[1] < 37){
 	  
 		     run_t.gDry = 1;
-	         SendData_Set_Command(0x12); //PTC turn On
+	         SendData_Set_Command(DRY_ON); //PTC turn On
 				 
 		  }
 	  
@@ -562,10 +562,8 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 {
     static uint8_t temperature_decade, temperature_unit;
 	static uint8_t hum1,hum2,temp1,temp2; 
-   
-
-
-	 switch(cmd){
+	
+    switch(cmd){
 
 
 	 case WIFI_CMD:
