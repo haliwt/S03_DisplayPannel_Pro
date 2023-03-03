@@ -191,10 +191,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                   if(inputBuf[0]==0x01)
                      run_t.wifi_connect_flag =1;
                    else 
-                      run_t.wifi_connect_flag =0;
+                     run_t.wifi_connect_flag =0;
                    
                     state=0;
-                    run_t.decodeFlag=1;
+                  //  run_t.decodeFlag=1;
              
             break;
 
@@ -269,6 +269,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		}
 		HAL_UART_Receive_IT(&huart1,inputBuf,1);//UART receive data interrupt 1 byte
 	}
+    HAL_UART_Receive_IT(&huart1,inputBuf,1);//UART receive data interrupt 1 byte
 }
 
 /********************************************************************************

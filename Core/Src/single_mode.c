@@ -648,7 +648,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 
       break;
 
-       case WIFI_BEIJING_TIME: 
+       case WIFI_BEIJING_TIME: //run_t.wifi_connect_flag
          if(run_t.wifi_connect_flag ==1 && run_t.gPower_On==1){
            if(run_t.timer_timing_define_flag==timing_not_definition && run_t.temp_set_timer_timing_flag==0){
 			 lcd_t.number5_low=(run_t.dispTime_hours ) /10;
@@ -695,6 +695,16 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
             
         }
 
+      break;
+
+//      case WIFI_INFO:
+//                
+//              run_t.wifi_connect_flag = inputBuf[0];
+//              
+//                   
+//      break;
+      default:
+        
       break;
 
 	}

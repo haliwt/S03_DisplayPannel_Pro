@@ -119,19 +119,18 @@ int main(void)
 		  
 	  }
 	  else{
-          
+       
           key_value_flag  = KEY_Scan();
           Process_Key_Handler(key_value_flag);
-	  
+	       
 		  if(run_t.decodeFlag ==1){
 			  run_t.decodeFlag =0;
 			  Decode_Function();
 		  }
-		  else{
-              
-            RunPocess_Command_Handler();
+		  
+           RunPocess_Command_Handler();
 
-		  }
+		  
 		  
 		  
 	  }
