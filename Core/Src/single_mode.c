@@ -431,8 +431,11 @@ void RunPocess_Command_Handler(void)
 {
    //key input run function
    static uint8_t key_set_temp_flag,temp1,temp2;
+   static uint8_t link_wifi_success;
    if(run_t.gPower_On ==1 && run_t.decodeFlag ==0){
+
        RunKeyOrder_Handler();
+
 	   if(run_t.panel_key_setup_timer_flag==1){
            run_t.panel_key_setup_timer_flag=0;
 		   key_set_temp_flag =1;
@@ -466,15 +469,17 @@ void RunPocess_Command_Handler(void)
 	  
 				run_t.gDry = 0;
 
-		        SendData_Set_Command(DRY_OFF); //PTC turn off
+		       // SendData_Set_Command(DRY_OFF); //PTC turn off
 			    //sendAi_usart_fun(0x91);//dry turn off;//turn off PTC "heat"
+			    SendData_Set_Command(DRY_OFF_NO_BUZZER);
 			    
                 
 		  }
 		  else if((run_t.wifi_set_temperature -3) > run_t.gReal_humtemp[1] ||  run_t.gReal_humtemp[1] < 37){
 	  
 		     run_t.gDry = 1;
-	         SendData_Set_Command(DRY_ON); //PTC turn On
+	         //SendData_Set_Command(DRY_ON); //PTC turn On
+	             SendData_Set_Command(DRY_ON_NO_BUZZER);
 				 
 		  }
 	  
@@ -509,6 +514,22 @@ void RunPocess_Command_Handler(void)
 		 if(run_t.wifi_set_temperature==0)run_t.wifi_set_temperature=20;
          SendData_Temp_Data(run_t.wifi_set_temperature);
     }
+
+    if(run_t.wifi_connect_flag ==0 && link_wifi_success==0 && run_t.gTimer_connect_wifi > 4){
+           run_t.gTimer_connect_wifi=0;
+           link_wifi_success=0;
+           SendData_Set_Command(WIFI_CONNECT_FAIL);
+
+     }
+
+     if(run_t.wifi_connect_flag ==1 && link_wifi_success==0 ){
+            link_wifi_success++;
+          // SendData_Set_Command(WIFI_CONNECT_SUCCESS);
+
+     }
+
+
+
 
   
  
@@ -697,12 +718,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 
       break;
 
-//      case WIFI_INFO:
-//                
-//              run_t.wifi_connect_flag = inputBuf[0];
-//              
-//                   
-//      break;
+
       default:
         
       break;

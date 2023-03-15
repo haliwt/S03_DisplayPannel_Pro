@@ -31,11 +31,19 @@ typedef enum{
 	 DRY_ON = 0x40,
 	 DRY_OFF = 0x41,
 
+	 DRY_ON_NO_BUZZER = 0x90,
+	 DRY_OFF_NO_BUZZER = 0x91,
+
 	 PLASMA_ON = 0x20,
 	 PLASMA_OFF = 0x21,
 
 	 FAN_ON =0x10,
-	 FAN_OFF = 0x11
+	 FAN_OFF = 0x11,
+
+	 WIFI_CONNECT_FAIL=0x55,
+
+	 WIFI_CONNECT_SUCCESS= 0xAA
+	 
 
 
 

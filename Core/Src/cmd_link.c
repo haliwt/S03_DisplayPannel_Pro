@@ -192,7 +192,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                      run_t.wifi_connect_flag =1;
                    else 
                      run_t.wifi_connect_flag =0;
-                   
+                 
+                    run_t.decodeFlag=1; 
                     state=0;
                   //  run_t.decodeFlag=1;
              

@@ -97,6 +97,7 @@ typedef struct __RUN{
    uint8_t gTimer_digital5678_ms;
    uint8_t gTimer_key_timing;
    uint8_t gTimer_timing;
+   uint8_t gTimer_connect_wifi ;
 
     int8_t dispTime_hours;
 	int8_t dispTime_minutes;
