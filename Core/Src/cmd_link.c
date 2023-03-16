@@ -164,16 +164,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			break;
 		case 2://#2
 			if(inputBuf[0]=='D' || inputBuf[0]=='W'   || inputBuf[0]=='P' ||inputBuf[0] =='C' || inputBuf[0] == 'B' \
-			 ||inputBuf[0] == 'S' || inputBuf[0]=='T') //'D'->data , 'W' ->wifi
+			 ||inputBuf[0] == 'S' || inputBuf[0]=='T'||inputBuf[0]=='E') //'D'->data , 'W' ->wifi
 			{
 				
 				if(inputBuf[0]=='D') run_t.single_data=PANEL_DATA; //receive data is single data
                 else if(inputBuf[0]=='W') run_t.single_data = WIFI_INFO; //wifi data
-                else if(inputBuf[0]=='P') run_t.single_data = WIFI_TEMP;//temperature 
+                else if(inputBuf[0]=='P') run_t.single_data = WIFI_REAL_TEMP;//temperature 
 				else if(inputBuf[0]=='C') run_t.single_data = WIFI_CMD; //command 
 				else if(inputBuf[0]=='B') run_t.single_data = WIFI_BEIJING_TIME;
 				else if(inputBuf[0]=='S') run_t.single_data = WIFI_WIND_SPEED;
 				else if(inputBuf[0]=='T') run_t.single_data = WIFI_SET_TIMING;
+				else if(inputBuf[0]=='E') run_t.single_data = WIFI_SET_TEMPERATURE;
 			    state=3;
 			}
 			else
@@ -199,7 +200,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
              
             break;
 
-            case WIFI_TEMP : //wifi modify temperature of value
+            case WIFI_REAL_TEMP : //wifi modify temperature of value
                  run_t.wifi_set_temperature=inputBuf[0]; 
                  state=0;
                  run_t.decodeFlag=1;
@@ -229,6 +230,13 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                     run_t.decodeFlag=1; 
 
              break;
+
+			 case WIFI_SET_TEMPERATURE:
+			     run_t.wifi_set_oneself_temperature=inputBuf[0]; 
+                 state=0;
+                 run_t.decodeFlag=1;
+
+			 break;
 
          	}
 

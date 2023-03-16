@@ -78,7 +78,10 @@ typedef struct __RUN{
 
    uint8_t wifi_led_fast_blink_flag ;
  
-   uint8_t temp_set_timer_timing_flag;
+   uint8_t  temp_set_timer_timing_flag;
+   uint8_t  wifi_set_oneself_temperature;
+   uint8_t   wifi_set_temperature_value_flag;
+   
 
  
    

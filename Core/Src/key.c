@@ -70,7 +70,7 @@ uint8_t KEY_Scan(void)
 					
                    
                  }
-				 else if(++key_t.on_time>5){
+				 else if(++key_t.on_time>10){
 
 					key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
 					key_t.on_time = 0;                        //key .value = 0xEF ^ 0XFF = 0X10

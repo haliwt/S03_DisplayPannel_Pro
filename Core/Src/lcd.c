@@ -245,7 +245,7 @@ void DisplayPanel_Ref_Handler(void)
 	     LCD_DisplayNumber_OneTwo_Icon_Handler();
 
 	 }
-	 else{
+	 else{ //digital "1,2" don't blink LED
         TM1723_Write_Display_Data(0xC4,(0x01+lcdNumber2_Low[lcd_t.number2_low]+lcdNumber3_High[lcd_t.number3_high])&0xff);
 	 }
 	 /**********************************end temperature*****************************************/
@@ -552,7 +552,8 @@ void DisplayPanel_Ref_Handler(void)
 static void Display_Kill_Dry_Ster_Icon(void)
 {
 
-  if(run_t.wifi_set_temp_flag ==0){
+   //number "1,2" -> temperature
+   if(run_t.wifi_set_temp_flag ==0){
 	  if(run_t.gDry==1 && run_t.gPlasma==1 && run_t.gBug==1){
 
 	  
@@ -634,7 +635,7 @@ static void LCD_DisplayNumber_OneTwo_Icon_Handler(void)
 				 run_t.wifi_set_temp_flag =0;
 			     run_t.temperature_set_flag = 1;
 				 run_t.gTimer_temp_delay =0;
-				 run_t.wifi_set_temperature = run_t.wifi_set_temperature;
+				
 				 
 			 }
 
@@ -661,7 +662,7 @@ static void LCD_DisplayNumber_OneTwo_Icon_Handler(void)
 				 run_t.wifi_set_temp_flag =0;
 			     run_t.temperature_set_flag = 1;
 				 run_t.gTimer_temp_delay =0;
-				 run_t.wifi_set_temperature = run_t.wifi_set_temperature;
+				
 				 
 			 }
 
