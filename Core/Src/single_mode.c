@@ -81,8 +81,10 @@ void Process_Key_Handler(uint8_t keylabel)
 
 	  case model_key:
 		if(run_t.gPower_On ==1){
+			SendData_Buzzer();
+			HAL_Delay(5);
 			run_t.temp_set_timer_timing_flag=1;//run_t.gModel =2;
-			single_buzzer_fun();
+		
 			run_t.gTimer_key_timing=0;
 			
 				
@@ -93,7 +95,9 @@ void Process_Key_Handler(uint8_t keylabel)
 
 	  case add_key:
 	  	 if(run_t.gPower_On ==1){
-			single_buzzer_fun();
+		
+			SendData_Buzzer();
+			HAL_Delay(5);
 
 		    switch(run_t.temp_set_timer_timing_flag){
 
@@ -167,7 +171,9 @@ void Process_Key_Handler(uint8_t keylabel)
 
 	  case dec_key:
 	   if(run_t.gPower_On ==1){
-			single_buzzer_fun();
+	   	SendData_Buzzer();
+		HAL_Delay(5);
+	
 	     if(run_t.temp_set_timer_timing_flag==0){ //Temperature value adjust 
 	        run_t.wifi_set_temperature_value_flag =0;
 			//setup temperature of value,minimum 20,maximum 40
@@ -479,8 +485,6 @@ void RunPocess_Command_Handler(void)
 	  
 				run_t.gDry = 0;
 
-		       // SendData_Set_Command(DRY_OFF); //PTC turn off
-			    //sendAi_usart_fun(0x91);//dry turn off;//turn off PTC "heat"
 			    SendData_Set_Command(DRY_OFF_NO_BUZZER);
 			    
                 
@@ -488,7 +492,7 @@ void RunPocess_Command_Handler(void)
 		  else if((run_t.wifi_set_temperature -3) > run_t.gReal_humtemp[1] ||  run_t.gReal_humtemp[1] < 37){
 	  
 		     run_t.gDry = 1;
-	         //SendData_Set_Command(DRY_ON); //PTC turn On
+	      
 	             SendData_Set_Command(DRY_ON_NO_BUZZER);
 				 
 		  }
@@ -745,8 +749,10 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 			//  temperature_unit = run_t.wifi_set_temperature %10;
 			  run_t.wifi_set_temperature_value_flag =1;
 
-		      temperature_decade= run_t.wifi_set_oneself_temperature /10 ;
-			  temperature_unit = run_t.wifi_set_oneself_temperature %10;
+			  run_t.wifi_set_temperature = run_t.wifi_set_oneself_temperature;
+
+		      temperature_decade=  run_t.wifi_set_temperature /10 ;
+			  temperature_unit =  run_t.wifi_set_temperature %10;
 		   
 	         lcd_t.number1_high = temperature_decade;
 			 lcd_t.number1_low = temperature_decade;
