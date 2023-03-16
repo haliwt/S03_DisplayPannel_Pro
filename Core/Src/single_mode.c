@@ -78,6 +78,7 @@ void Process_Key_Handler(uint8_t keylabel)
 	  case link_cloud_key:
          run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
          SendData_Set_Wifi(0x01);
+	      HAL_Delay(5);
 		run_t.wifi_led_fast_blink_flag=1;
 		run_t.wifi_connect_flag =0;
 		run_t.gTimer_wifi_connect_counter=0;
