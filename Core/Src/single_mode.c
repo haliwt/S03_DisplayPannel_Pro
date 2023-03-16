@@ -52,17 +52,23 @@ void Process_Key_Handler(uint8_t keylabel)
 	    if(run_t.gPower_On==0 || run_t.gPower_On ==0xFF){
  			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
 		 	  SendData_PowerOff(1);
-       
+              HAL_Delay(5);
 		      Power_On_Fun();
 
 		 }
 		 else{
-		 	run_t.wifi_set_temperature_value_flag=0;
+		 
+		    Power_Off_Fun();
+            HAL_Delay(5);
+			run_t.temperature_set_flag = 0;
+			run_t.wifi_set_temperature_value_flag=0;
 		    run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
             run_t.wifi_led_fast_blink_flag=0;
             run_t.Timer_mode_flag = 0;
-		    Power_Off_Fun();
 
+			run_t.panel_key_setup_timer_flag=0;
+            run_t.wifi_set_temp_flag=0;
+		 
 
 		 }
 	  	 
