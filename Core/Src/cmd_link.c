@@ -276,9 +276,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		break;
 
 		}
-		HAL_UART_Receive_IT(&huart1,inputBuf,1);//UART receive data interrupt 1 byte
+      HAL_UART_Receive_IT(&huart1,inputBuf,1);//UART receive data interrupt 1 byte
 	}
-    HAL_UART_Receive_IT(&huart1,inputBuf,1);//UART receive data interrupt 1 byte
+    
 }
 
 /********************************************************************************

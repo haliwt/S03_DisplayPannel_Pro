@@ -68,6 +68,7 @@ void Process_Key_Handler(uint8_t keylabel)
 
 			run_t.panel_key_setup_timer_flag=0;
             run_t.wifi_set_temp_flag=0;
+			run_t.timer_timing_define_flag = timing_not_definition;
 		 
 
 		 }
@@ -453,7 +454,7 @@ void RunPocess_Command_Handler(void)
 {
    //key input run function
    static uint8_t key_set_temp_flag,temp1,temp2,decade_temp,unit_temp;
-   static uint8_t link_wifi_success;
+   static uint8_t link_wifi_success,send_set_temperature_value;
    if(run_t.gPower_On ==1 && run_t.decodeFlag ==0){
 
        RunKeyOrder_Handler();
@@ -479,10 +480,12 @@ void RunPocess_Command_Handler(void)
 			lcd_t.number2_low = temp2;
 			lcd_t.number2_high = temp2;
 			run_t.gTimer_temp_delay =0;
+			run_t.send_temperature_tiimes=0;
 			run_t.temperature_set_flag = 1;
             
 		}
 	   if(run_t.gModel == 1){ //as is "Ai mode"
+
 
           if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay >59){
                run_t.gTimer_temp_delay =0;
@@ -491,20 +494,52 @@ void RunPocess_Command_Handler(void)
 		  if(run_t.wifi_set_temperature <= run_t.gReal_humtemp[1] || run_t.gReal_humtemp[1] >39){//envirment temperature
 	  
 				run_t.gDry = 0;
+			
+                if(run_t.send_temperature_tiimes== 0 || run_t.send_temperature_tiimes==1 || run_t.send_temperature_tiimes==2){
+					if(run_t.send_temperature_tiimes==0)run_t.send_temperature_tiimes=2;
+					else
+					   run_t.send_temperature_tiimes++;
+			        SendData_Set_Command(DRY_OFF_NO_BUZZER);
 
-			    SendData_Set_Command(DRY_OFF_NO_BUZZER);
+                }
 			    
                 
 		  }
 		  else if((run_t.wifi_set_temperature -3) > run_t.gReal_humtemp[1] ||  run_t.gReal_humtemp[1] < 37){
 	  
-		     run_t.gDry = 1;
-	      
-	             SendData_Set_Command(DRY_ON_NO_BUZZER);
+		         run_t.gDry = 1;
+			     
+
+		          if(run_t.send_temperature_tiimes == 0 || run_t.send_temperature_tiimes==1 || run_t.send_temperature_tiimes==2){
+				 	if(run_t.send_temperature_tiimes==0)run_t.send_temperature_tiimes=2;
+					else
+					   run_t.send_temperature_tiimes++;
+	                SendData_Set_Command(DRY_ON_NO_BUZZER);
+		         }
 				 
 		  }
 	  
 	     }
+		 else{
+
+		  if(run_t.gReal_humtemp[1] >39 && run_t.gTimer_temp_delay >119){//envirment temperature
+	            run_t.gTimer_temp_delay =0;
+				run_t.gDry = 0;
+			
+                if(run_t.send_temperature_tiimes== 0 || run_t.send_temperature_tiimes==1 ){
+					   run_t.send_temperature_tiimes++;
+			        SendData_Set_Command(DRY_OFF_NO_BUZZER);
+
+                }
+			    
+                
+		  }
+	
+
+
+
+
+		 }
 
 	  }
 	   
