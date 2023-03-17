@@ -52,14 +52,14 @@ void Process_Key_Handler(uint8_t keylabel)
 	    if(run_t.gPower_On==0 || run_t.gPower_On ==0xFF){
  			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
 		 	  SendData_PowerOff(1);
-              HAL_Delay(5);
+              HAL_Delay(10);
 		      Power_On_Fun();
 
 		 }
 		 else{
 		 
 		    Power_Off_Fun();
-            HAL_Delay(5);
+            HAL_Delay(10);
 			run_t.temperature_set_flag = 0;
 			run_t.wifi_set_temperature_value_flag=0;
 		    run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
@@ -79,7 +79,7 @@ void Process_Key_Handler(uint8_t keylabel)
 	  case link_cloud_key:
          run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
          SendData_Set_Wifi(0x01);
-	      HAL_Delay(5);
+	      HAL_Delay(10);
 		run_t.wifi_led_fast_blink_flag=1;
 		run_t.wifi_connect_flag =0;
 		run_t.gTimer_wifi_connect_counter=0;
@@ -90,7 +90,7 @@ void Process_Key_Handler(uint8_t keylabel)
 	  case model_key:
 		if(run_t.gPower_On ==1){
 			SendData_Buzzer();
-			HAL_Delay(5);
+			HAL_Delay(10);
 			run_t.temp_set_timer_timing_flag=1;//run_t.gModel =2;
 		
 			run_t.gTimer_key_timing=0;
@@ -105,7 +105,7 @@ void Process_Key_Handler(uint8_t keylabel)
 	  	 if(run_t.gPower_On ==1){
 		
 			SendData_Buzzer();
-			HAL_Delay(5);
+			HAL_Delay(10);
 
 		    switch(run_t.temp_set_timer_timing_flag){
 
@@ -180,7 +180,7 @@ void Process_Key_Handler(uint8_t keylabel)
 	  case dec_key:
 	   if(run_t.gPower_On ==1){
 	   	SendData_Buzzer();
-		HAL_Delay(5);
+		HAL_Delay(10);
 	
 	     if(run_t.temp_set_timer_timing_flag==0){ //Temperature value adjust 
 	        run_t.wifi_set_temperature_value_flag =0;
