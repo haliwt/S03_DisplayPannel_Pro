@@ -484,6 +484,7 @@ void RunPocess_Command_Handler(void)
 			run_t.temperature_set_flag = 1;
             
 		}
+	   //set up temparature value 
 	   if(run_t.gModel == 1){ //as is "Ai mode"
 
 
@@ -518,14 +519,14 @@ void RunPocess_Command_Handler(void)
 		         }
 				 
 		  }
-	  
-	     }
-		 else{
+          }
+	   	}
+	  else{
 
-		  if(run_t.gReal_humtemp[1] >39 && run_t.gTimer_temp_delay >119){//envirment temperature
+		 if(run_t.gReal_humtemp[1] >39 && run_t.gTimer_temp_delay >119){//envirment temperature
 	            run_t.gTimer_temp_delay =0;
 				run_t.gDry = 0;
-			
+			    run_t.auto_model_shut_off_ptc_flag=1;
                 if(run_t.send_temperature_tiimes== 0 || run_t.send_temperature_tiimes==1 ){
 					   run_t.send_temperature_tiimes++;
 			        SendData_Set_Command(DRY_OFF_NO_BUZZER);
@@ -534,16 +535,18 @@ void RunPocess_Command_Handler(void)
 			    
                 
 		  }
-	
 
+		  if(run_t.gReal_humtemp[1] < 36 && run_t.auto_model_shut_off_ptc_flag ==1 &&  run_t.gTimer_temp_delay >119){
+                  run_t.gTimer_temp_delay =0;
+                  run_t.gDry = 1;
+	              SendData_Set_Command(DRY_ON_NO_BUZZER); //PTC turn On
+             
+             
+           }
 
-
-
-		 }
 
 	  }
-	   
-   }
+   	}
    //receive from mainboard data 
 
    if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff ){
@@ -586,11 +589,7 @@ void RunPocess_Command_Handler(void)
 
      }
 
-
-
-
   
- 
 }
 /******************************************************************************
 *
