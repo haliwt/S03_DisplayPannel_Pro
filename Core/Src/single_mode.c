@@ -52,14 +52,14 @@ void Process_Key_Handler(uint8_t keylabel)
 	    if(run_t.gPower_On==0 || run_t.gPower_On ==0xFF){
  			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
 		 	  SendData_PowerOff(1);
-              HAL_Delay(200);
+              HAL_Delay(300);
 		      Power_On_Fun();
 
 		 }
 		 else{
 		 
 		    Power_Off_Fun();
-            HAL_Delay(10);
+            HAL_Delay(200);
 			run_t.temperature_set_flag = 0;
 			run_t.wifi_set_temperature_value_flag=0;
 		    run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
@@ -79,7 +79,7 @@ void Process_Key_Handler(uint8_t keylabel)
 	  case link_cloud_key:
          run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
          SendData_Set_Wifi(0x01);
-	      HAL_Delay(200);
+	     HAL_Delay(300);
 		run_t.wifi_led_fast_blink_flag=1;
 		run_t.wifi_connect_flag =0;
 		run_t.gTimer_wifi_connect_counter=0;
@@ -263,7 +263,7 @@ void Process_Key_Handler(uint8_t keylabel)
 			   else{
 				   run_t.Timer_mode_flag = 1;
 					SendData_Time_Data(run_t.dispTime_hours);
-                     HAL_Delay(200);
+                     HAL_Delay(300);
 			   }
 	
 		}
@@ -303,7 +303,7 @@ void Process_Key_Handler(uint8_t keylabel)
    
 		if(run_t.wifi_send_buzzer_sound != WIFI_POWER_OFF_ITEM){
                 SendData_PowerOff(0);
-            HAL_Delay(200);
+            HAL_Delay(300);
 
         }
 		
@@ -502,7 +502,7 @@ void RunPocess_Command_Handler(void)
 					else
 					   run_t.send_temperature_tiimes++;
 			        SendData_Set_Command(DRY_OFF_NO_BUZZER);
-                    HAL_Delay(200);
+                    HAL_Delay(300);
 
                 }
 			    
@@ -518,7 +518,7 @@ void RunPocess_Command_Handler(void)
 					else
 					   run_t.send_temperature_tiimes++;
 	                SendData_Set_Command(DRY_ON_NO_BUZZER);
-                     HAL_Delay(200);
+                     HAL_Delay(300);
 		         }
 				 
 		  }
@@ -544,7 +544,7 @@ void RunPocess_Command_Handler(void)
                   run_t.gTimer_temp_delay =0;
                   run_t.gDry = 1;
 	              SendData_Set_Command(DRY_ON_NO_BUZZER); //PTC turn On
-               HAL_Delay(200);
+               HAL_Delay(300);
              
              
            }
@@ -578,7 +578,7 @@ void RunPocess_Command_Handler(void)
 		 if(run_t.wifi_set_temperature==0)run_t.wifi_set_temperature=20;
 		  if(run_t.wifi_set_temperature_value_flag != 1){
 		  	  SendData_Temp_Data(run_t.wifi_set_temperature);
-               HAL_Delay(200);
+               HAL_Delay(300);
 			}
     }
 
@@ -586,7 +586,7 @@ void RunPocess_Command_Handler(void)
            run_t.gTimer_connect_wifi=0;
            link_wifi_success=0;
            SendData_Set_Command(WIFI_CONNECT_FAIL);
-         HAL_Delay(200);
+         HAL_Delay(300);
 
      }
 
