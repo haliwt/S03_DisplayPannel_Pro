@@ -2,6 +2,7 @@
 #define __LED_H_
 #include "main.h"
 
+extern IWDG_HandleTypeDef IWDG_Handler;
 
 #define POWER_ON_LED()             HAL_GPIO_WritePin(LED_INFO_POWER_GPIO_Port, LED_INFO_POWER_Pin,GPIO_PIN_SET)
 #define POWER_OFF_LED()            HAL_GPIO_WritePin(LED_INFO_POWER_GPIO_Port, LED_INFO_POWER_Pin,GPIO_PIN_RESET)
@@ -29,6 +30,8 @@ void Panel_Led_OnOff_RunCmd(void (*panelledHandler)(void));
 
 void Panel_Led_OnOff_Function(void);
 
+void IWDG_Init(uint8_t prer,uint16_t rlr);
+void IWDG_Feed(void);
 
 
 #endif 

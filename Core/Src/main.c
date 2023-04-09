@@ -37,7 +37,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-uint8_t key_value_flag;
+uint8_t key_read_value;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -96,6 +96,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM3_Init();
   delay_init(24);
+  IWDG_Init(IWDG_PRESCALER_128,2000);//8s =(128*2000)/32(ms)=8000
 
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
@@ -120,15 +121,26 @@ int main(void)
 	  }
 	  else{
         
-        if(run_t.decodeFlag ==1){
-			run_t.decodeFlag =0;
-			Decode_Function();
-		  }
-		  else{
-			   key_value_flag  = KEY_Scan();
-	           Process_Key_Handler(key_value_flag);
-	           RunPocess_Command_Handler();
-		  }
+       
+			
+		if(run_t.decodeFlag ==1){
+			  run_t.decodeFlag =0;
+			  run_t.process_run_guarantee_flag=1;
+             Decode_Function();
+                
+           }
+           else
+            {
+              run_t.key_read_value  = KEY_Scan();
+
+			  USART1_Cmd_Error_Handler();
+	          Process_Key_Handler(run_t.key_read_value);
+			  
+	         RunPocess_Command_Handler();
+                
+                
+            }
+		  
       }
       
    

@@ -5,6 +5,29 @@
 void (*panel_led_fun)(void);
 
 
+IWDG_HandleTypeDef IWDG_Handler;
+
+void IWDG_Init(uint8_t prer,uint16_t rlr)
+{
+    IWDG_Handler.Instance=IWDG;
+    IWDG_Handler.Init.Prescaler=prer;	//����IWDG��Ƶϵ��
+    IWDG_Handler.Init.Window = rlr;
+    IWDG_Handler.Init.Reload=rlr;		//��װ��ֵ
+  		//��ʼ��IWDG,Ĭ�ϻῪ���������Ź�	
+  if (HAL_IWDG_Init(&IWDG_Handler) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+  
+
+//ι�������Ź�
+void IWDG_Feed(void)
+{   
+    HAL_IWDG_Refresh(&IWDG_Handler); 	//ι��
+}
+
+
 /*******************************************************************************************
  	*
  	* Function Name:void Panel_Led_OnOff_Function(void)

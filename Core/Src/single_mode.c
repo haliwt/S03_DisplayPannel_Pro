@@ -44,15 +44,18 @@ static void Setup_Timer_Times(void);
 ************************************************************************/
 void Process_Key_Handler(uint8_t keylabel)
 {
-   static uint8_t set_timer_flag,temp_bit_1_hours,temp_bit_2_hours,temp_bit_1_minute,temp_bit_2_minute;
+    static uint8_t power_on_flag_times;
+    static uint8_t set_timer_flag,temp_bit_1_hours,temp_bit_2_hours,temp_bit_1_minute,temp_bit_2_minute;
   
     switch(keylabel){
 
       case power_key:
-	    if(run_t.gPower_On==0 || run_t.gPower_On ==0xFF){
+	      power_on_flag_times = power_on_flag_times ^ 0x01;
+          if(power_on_flag_times==1){
+         
  			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
 		 	  SendData_PowerOff(1);
-              HAL_Delay(300);
+              HAL_Delay(200);
 		      Power_On_Fun();
 
 		 }
@@ -76,10 +79,19 @@ void Process_Key_Handler(uint8_t keylabel)
 
 	  break;
 
+	  case power_on_special_key:
+	          run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
+		 	  SendData_PowerOff(0xAA); //POWER ON 
+              HAL_Delay(200);
+		      Power_On_Fun();
+			  run_t.gPower_repeat_times_flag =1;
+
+	  break;
+
 	  case link_cloud_key:
          run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
          SendData_Set_Wifi(0x01);
-	     HAL_Delay(300);
+	     HAL_Delay(200);
 		run_t.wifi_led_fast_blink_flag=1;
 		run_t.wifi_connect_flag =0;
 		run_t.gTimer_wifi_connect_counter=0;
@@ -90,7 +102,7 @@ void Process_Key_Handler(uint8_t keylabel)
 	  case model_key:
 		if(run_t.gPower_On ==1){
 			SendData_Buzzer();
-			HAL_Delay(200);
+		
 			run_t.temp_set_timer_timing_flag=1;//run_t.gModel =2;
 		
 			run_t.gTimer_key_timing=0;
@@ -105,13 +117,12 @@ void Process_Key_Handler(uint8_t keylabel)
 	  	 if(run_t.gPower_On ==1){
 		
 			SendData_Buzzer();
-			HAL_Delay(200);
+		
 
 		    switch(run_t.temp_set_timer_timing_flag){
 
 			case 0: //set temperature value add number
-             //set temperaturre value 
-			//if(run_t.temp_set_timer_timing_flag==0){//if(run_t.Timer_mode_flag==0){ //temperature value adjust 
+      
 				run_t.wifi_set_temperature_value_flag =0;
 				run_t.wifi_set_temperature ++;
 	            if(run_t.wifi_set_temperature < 20){
@@ -120,9 +131,10 @@ void Process_Key_Handler(uint8_t keylabel)
 				
 				if(run_t.wifi_set_temperature > 40)run_t.wifi_set_temperature= 20;
 				
-			    decade_temp =  run_t.wifi_set_temperature / 10 %10;
+            
+			    decade_temp =  run_t.wifi_set_temperature / 10 ;
 				unit_temp =  run_t.wifi_set_temperature % 10; //
-
+                
 				lcd_t.number1_low=decade_temp;
 				lcd_t.number1_high =decade_temp;
 
@@ -130,12 +142,14 @@ void Process_Key_Handler(uint8_t keylabel)
 				lcd_t.number2_high = unit_temp;
 
 				run_t.panel_key_setup_timer_flag = 1;
+                
+             
 					
 			
 			   break;
 
 			   case 1:
-				   //Timer timing value adjust
+				 
 					
 					 run_t.gTimer_key_timing =0;
                     set_timer_flag=0;
@@ -151,12 +165,12 @@ void Process_Key_Handler(uint8_t keylabel)
 							    
 							}
 					}
-					temp_bit_2_minute = run_t.dispTime_minutes /10 %10;
+					temp_bit_2_minute = run_t.dispTime_minutes /10 ;
 					temp_bit_1_minute = run_t.dispTime_minutes %10;
-
-					temp_bit_2_hours = run_t.dispTime_hours /10 %10;
+                  
+					temp_bit_2_hours = run_t.dispTime_hours /10 ;
 					temp_bit_1_hours = run_t.dispTime_hours  %10;
-
+                    
 					lcd_t.number5_low=temp_bit_2_hours;
 					lcd_t.number5_high =temp_bit_2_hours;
 
@@ -180,18 +194,17 @@ void Process_Key_Handler(uint8_t keylabel)
 	  case dec_key:
 	   if(run_t.gPower_On ==1){
 	   	SendData_Buzzer();
-		HAL_Delay(200);
+	//	HAL_Delay(200);
 	
 	     if(run_t.temp_set_timer_timing_flag==0){ //Temperature value adjust 
 	        run_t.wifi_set_temperature_value_flag =0;
-			//setup temperature of value,minimum 20,maximum 40
 			run_t.wifi_set_temperature--;
 			if(run_t.wifi_set_temperature<20) run_t.wifi_set_temperature=40;
 	        if(run_t.wifi_set_temperature >40)run_t.wifi_set_temperature=40;
 
-	        decade_temp =  run_t.wifi_set_temperature / 10 %10;
+	        decade_temp =  run_t.wifi_set_temperature / 10;
 			unit_temp =  run_t.wifi_set_temperature % 10; //
-
+             HAL_Delay(5);
 			lcd_t.number1_low=decade_temp;
 			lcd_t.number1_high =decade_temp;
 
@@ -211,19 +224,20 @@ void Process_Key_Handler(uint8_t keylabel)
 					if(run_t.dispTime_hours < 0){
 						run_t.dispTime_hours=24 ;
 				        run_t.dispTime_minutes =0;
-					  // run_t.dispTime_minutes = run_t.dispTime_minutes - 30;
+					  
 					}
 					else{
 					  run_t.dispTime_minutes =0;
-					  //run_t.dispTime_minutes = run_t.dispTime_minutes - 30;
+					 
 					}
 					
 				}
-				    temp_bit_2_minute = run_t.dispTime_minutes /10 %10;
+				    temp_bit_2_minute = run_t.dispTime_minutes /10 ;
 					temp_bit_1_minute = run_t.dispTime_minutes %10;
-
-					temp_bit_2_hours = run_t.dispTime_hours /10 %10;
+                     HAL_Delay(5);
+					temp_bit_2_hours = run_t.dispTime_hours /10 ;
 					temp_bit_1_hours = run_t.dispTime_hours  %10;
+                     HAL_Delay(5);
 
 					lcd_t.number5_low=temp_bit_2_hours;
 					lcd_t.number5_high =temp_bit_2_hours;
@@ -474,7 +488,7 @@ void RunPocess_Command_Handler(void)
 
 	        temp1 = run_t.gReal_humtemp[1]/10 %10;  // temperature
             temp2 = run_t.gReal_humtemp[1]%10;
-
+           
 		    lcd_t.number1_low=temp1;
 			lcd_t.number1_high =temp1;
 
@@ -502,7 +516,7 @@ void RunPocess_Command_Handler(void)
 					else
 					   run_t.send_temperature_tiimes++;
 			        SendData_Set_Command(DRY_OFF_NO_BUZZER);
-                    HAL_Delay(300);
+                    HAL_Delay(200);
 
                 }
 			    
@@ -518,7 +532,7 @@ void RunPocess_Command_Handler(void)
 					else
 					   run_t.send_temperature_tiimes++;
 	                SendData_Set_Command(DRY_ON_NO_BUZZER);
-                     HAL_Delay(300);
+                     HAL_Delay(200);
 		         }
 				 
 		  }
@@ -544,7 +558,7 @@ void RunPocess_Command_Handler(void)
                   run_t.gTimer_temp_delay =0;
                   run_t.gDry = 1;
 	              SendData_Set_Command(DRY_ON_NO_BUZZER); //PTC turn On
-               HAL_Delay(300);
+               HAL_Delay(200);
              
              
            }
@@ -578,7 +592,7 @@ void RunPocess_Command_Handler(void)
 		 if(run_t.wifi_set_temperature==0)run_t.wifi_set_temperature=20;
 		  if(run_t.wifi_set_temperature_value_flag != 1){
 		  	  SendData_Temp_Data(run_t.wifi_set_temperature);
-               HAL_Delay(300);
+               HAL_Delay(200);
 			}
     }
 
@@ -586,7 +600,7 @@ void RunPocess_Command_Handler(void)
            run_t.gTimer_connect_wifi=0;
            link_wifi_success=0;
            SendData_Set_Command(WIFI_CONNECT_FAIL);
-         HAL_Delay(300);
+         HAL_Delay(200);
 
      }
 
@@ -595,7 +609,12 @@ void RunPocess_Command_Handler(void)
           // SendData_Set_Command(WIFI_CONNECT_SUCCESS);
 
      }
+    if(run_t.gPower_On ==0 || run_t.gPower_On ==0xFF){
 
+       run_t.process_run_guarantee_flag=1;
+       IWDG_Feed();
+
+	}
   
 }
 /******************************************************************************
@@ -707,12 +726,12 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 	 case PANEL_DATA:
 	   
         if(run_t.gPower_On ==1){
-        hum1 =  run_t.gReal_humtemp[0]/10 %10;  //Humidity 
+        hum1 =  run_t.gReal_humtemp[0]/10 ;  //Humidity 
         hum2 =  run_t.gReal_humtemp[0]%10;
         
-        temp1 = run_t.gReal_humtemp[1]/10 %10;  // temperature
+        temp1 = run_t.gReal_humtemp[1]/10 ;  // temperature
         temp2 = run_t.gReal_humtemp[1]%10;
-
+       
          //temperature 
 		 lcd_t.number1_high = temp1;
 		 lcd_t.number1_low = temp1;
@@ -738,18 +757,18 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
            if(run_t.timer_timing_define_flag==timing_not_definition && run_t.temp_set_timer_timing_flag==0){
 			 lcd_t.number5_low=(run_t.dispTime_hours ) /10;
 	         lcd_t.number5_high =(run_t.dispTime_hours) /10;
-
-			 lcd_t.number6_low = (run_t.dispTime_hours ) %10;;
+              HAL_Delay(5);
+			 lcd_t.number6_low = (run_t.dispTime_hours ) %10;
 			 lcd_t.number6_high = (run_t.dispTime_hours ) %10;
-	   
+	         HAL_Delay(5);
 
 
 			lcd_t.number7_low = (run_t.dispTime_minutes )/10;
 			lcd_t.number7_high = (run_t.dispTime_minutes )/10;
-
+              HAL_Delay(5);
 			lcd_t.number8_low = (run_t.dispTime_minutes )%10;
 			lcd_t.number8_high = (run_t.dispTime_minutes )%10;
-
+              HAL_Delay(5);
 	        DisplayPanel_Ref_Handler();
 	      }
          }
@@ -766,10 +785,10 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
             run_t.dispTime_minutes = 0;
              lcd_t.number5_low=(run_t.dispTime_hours ) /10;
 	         lcd_t.number5_high =(run_t.dispTime_hours) /10;
-
+              HAL_Delay(5);
 			 lcd_t.number6_low = (run_t.dispTime_hours ) %10;;
 			 lcd_t.number6_high = (run_t.dispTime_hours ) %10;
-	   
+	          HAL_Delay(5);
 
 
 			lcd_t.number7_low = run_t.dispTime_minutes ;
@@ -801,7 +820,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 
 		      temperature_decade=  run_t.wifi_set_temperature /10 ;
 			  temperature_unit =  run_t.wifi_set_temperature %10;
-		   
+		       HAL_Delay(5);
 	         lcd_t.number1_high = temperature_decade;
 			 lcd_t.number1_low = temperature_decade;
 
@@ -815,6 +834,10 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 
 
 	  break;
+
+	  case IWDG_DATA:        
+          run_t.process_run_guarantee_flag=1;
+      break;
 
 
       default:
@@ -843,7 +866,7 @@ void Receive_Wifi_Cmd(uint8_t cmd)
             //  single_buzzer_fun();
               run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
               Power_On_Fun();
-              HAL_Delay(200);
+            //  HAL_Delay(200);
 			  cmd=0xff;
 
 	         break;
@@ -854,7 +877,7 @@ void Receive_Wifi_Cmd(uint8_t cmd)
 			   run_t.wifi_send_buzzer_sound = WIFI_POWER_OFF_ITEM;
 				
 			    Power_Off_Fun();
-                HAL_Delay(200);
+              //  HAL_Delay(200);
 				
               cmd=0xff;
 
@@ -863,14 +886,14 @@ void Receive_Wifi_Cmd(uint8_t cmd)
 			case WIFI_MODE_1: //AI turn on -> AI icon display 
                 if(run_t.gPower_On==1){
 				     run_t.gModel =1; //0-> has ,1->no gModel
-                    HAL_Delay(200);
+                   // HAL_Delay(200);
                 	} 
 			break;
 
 			 case WIFI_MODE_2: //icon don't display 
                  if(run_t.gPower_On==1){
 				   run_t.gModel =2; //turon off AI mode
-                     HAL_Delay(200);
+                    // HAL_Delay(200);
 			 	   
                  }
              break;
@@ -879,7 +902,7 @@ void Receive_Wifi_Cmd(uint8_t cmd)
 			  if(run_t.gPower_On==1){
                     run_t.gPlasma = 1;
 			        run_t.gFan_RunContinue =0;
-                  HAL_Delay(200);
+                 // HAL_Delay(200);
                 } 
 			 break;
 
@@ -888,7 +911,7 @@ void Receive_Wifi_Cmd(uint8_t cmd)
 			 	  run_t.gPlasma =0;
 				  
 		          run_t.gFan_RunContinue =0;
-                    HAL_Delay(200);
+                   // HAL_Delay(200);
                 }
 			 break;
 
@@ -896,7 +919,7 @@ void Receive_Wifi_Cmd(uint8_t cmd)
                 if(run_t.gPower_On==1){
 			        run_t.gDry =1;
                     run_t.gFan_RunContinue =0;
-                    HAL_Delay(200);
+                   // HAL_Delay(200);
                  
                 }
 			 break;
@@ -907,7 +930,7 @@ void Receive_Wifi_Cmd(uint8_t cmd)
 					run_t.gDry=0;
                  
 		            run_t.gFan_RunContinue =0;
-                    HAL_Delay(200);
+                    //HAL_Delay(200);
 			 	}
 
 			 break;
@@ -918,7 +941,7 @@ void Receive_Wifi_Cmd(uint8_t cmd)
 				  run_t.gBug =1; //turn on 
 			
 				 run_t.gFan_RunContinue =0;
-                     HAL_Delay(200);
+                   //  HAL_Delay(200);
 			    }
 
 			 break;
@@ -927,9 +950,17 @@ void Receive_Wifi_Cmd(uint8_t cmd)
 			 	if(run_t.gPower_On==1){
 				    run_t.gBug=0;
 					run_t.gFan_RunContinue =0;
-                    HAL_Delay(200);
+                   // HAL_Delay(200);
 			   }
 			 break;
+
+			 case IWDG_DATA:
+
+			   run_t.process_run_guarantee_flag =1;
+
+			 break;
+
+		
 
 
 	         default :

@@ -16,7 +16,8 @@ typedef enum WIFI_STATE_T{
     WIFI_SONIC_ON = 0x01,       //ultrasonic
     WIFI_SONIC_OFF = 0x11,
     WIFI_WIND_SPEED_ITEM = 0x90,
-    WIFI_TEMPERATURE = 0xA0
+    WIFI_TEMPERATURE = 0xA0,
+    IWDG_DATA= 0xB0
 
 
 }wifi_state_t;
@@ -83,7 +84,15 @@ typedef struct __RUN{
    uint8_t   wifi_set_temperature_value_flag;
    uint8_t send_temperature_tiimes;
    uint8_t auto_model_shut_off_ptc_flag;
-   
+
+   //iwdg ref
+   uint8_t process_run_guarantee_flag;
+   uint8_t iwdg_feed_success_flag ;
+   uint8_t gTimer_check_iwdg_flag;
+   uint8_t gTimer_iwdg ;
+   uint8_t key_read_value;
+   uint8_t gTimer_usart_error;
+   uint8_t gPower_repeat_times_flag;
 
  
    

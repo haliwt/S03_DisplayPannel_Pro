@@ -14,6 +14,7 @@ enum Signal{
 	WIFI_BEIJING_TIME,
 	WIFI_SET_TIMING,
 	WIFI_SET_TEMPERATURE
+	
 };
 
 
@@ -33,6 +34,7 @@ void SendData_Time_Data(uint8_t tdata);
 
 void SendData_Buzzer(void);
 
+void USART1_Cmd_Error_Handler(void);
 
 
 

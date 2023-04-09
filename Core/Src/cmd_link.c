@@ -3,6 +3,8 @@
 #include "gpio.h"
 #include "run.h"
 #include "display.h"
+#include "led.h"
+#include "single_mode.h"
 
 
 volatile static uint8_t transOngoingFlag; //interrupt Transmit flag bit , 1---stop,0--run
@@ -245,17 +247,27 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         
 		case 4: //
 
-		 if(run_t.single_data == WIFI_BEIJING_TIME){
-		 	  if(run_t.timer_timing_define_flag == timing_not_definition && run_t.temp_set_timer_timing_flag==0)
-				   run_t.dispTime_minutes = inputBuf[0];
-				state =5;
-		 }
-		 else if(run_t.single_data==PANEL_DATA){
+		switch(run_t.single_data==PANEL_DATA){
+
+				case PANEL_DATA:
+
+		
               run_t.gReal_humtemp[1]=inputBuf[0]; //temperature value
 			
 		     state=0;
 		     run_t.decodeFlag=1;
-          }
+	
+           
+		    break;
+
+                case WIFI_BEIJING_TIME:
+		 
+		 	  if(run_t.timer_timing_define_flag == timing_not_definition && run_t.temp_set_timer_timing_flag==0)
+				   run_t.dispTime_minutes = inputBuf[0];
+				state =5;
+		 
+		     break;
+			}
 
 		 break;
            
@@ -280,7 +292,80 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	}
     
 }
+/********************************************************************************
+	**
+	*Function Name:void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+	*Function :UART callback function  for UART interrupt for receive data
+	*Input Ref: structure UART_HandleTypeDef pointer
+	*Return Ref:NO
+	*
+*******************************************************************************/
+void USART1_Cmd_Error_Handler(void)
+{
+                  uint32_t temp;
+	 static uint8_t repeat_power_on;
 
+        if(run_t.gTimer_usart_error > 2){
+			run_t.gTimer_usart_error=0;
+			__HAL_UART_GET_FLAG(&huart1,UART_FLAG_ORE);
+	         if(UART_FLAG_ORE==1){
+	          __HAL_UART_CLEAR_OREFLAG(&huart1);
+	          temp =USART1->ISR;
+	          temp = USART1->RDR;
+	          IWDG_Init(IWDG_PRESCALER_128,2000);//8s =(128*2000)/32(ms)=8000
+	          MX_USART1_UART_Init();
+			  HAL_Delay(5);
+	          repeat_power_on=1;
+			  run_t.gPower_repeat_times_flag =0;
+			  UART_Start_Receive_IT(&huart1,inputBuf,1);
+	          
+	          
+	         }
+         }
+         if(repeat_power_on==1){
+             run_t.key_read_value = power_on_special_key;
+         }
+     
+       
+
+         if(run_t.gPower_repeat_times_flag ==1){
+                  repeat_power_on=2;
+
+         }
+          
+          
+     if(run_t.gTimer_iwdg > 1){
+          run_t.gTimer_iwdg = 0;
+          SendData_Set_Command(0xB0);
+     }
+     if(run_t.process_run_guarantee_flag==1){
+     
+       run_t.process_run_guarantee_flag=0;
+       run_t.iwdg_feed_success_flag =1;
+       run_t.gTimer_check_iwdg_flag =0;
+       IWDG_Feed();
+     
+     }
+     if(run_t.gTimer_check_iwdg_flag >3){
+         run_t.gTimer_check_iwdg_flag=0;
+         if(run_t.iwdg_feed_success_flag==1){
+            run_t.iwdg_feed_success_flag=0;
+         
+         }
+         else{
+             run_t.key_read_value = power_on_special_key;
+             run_t.gPower_repeat_times_flag =0;
+         	 IWDG_Init(IWDG_PRESCALER_128,2000);//8s =(128*2000)/32(ms)=8000
+             MX_USART1_UART_Init();
+			 HAL_Delay(5);
+             repeat_power_on=1;
+		     UART_Start_Receive_IT(&huart1,inputBuf,1);
+          
+         }
+     
+     }
+
+}
 /********************************************************************************
 **
 *Function Name:void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)

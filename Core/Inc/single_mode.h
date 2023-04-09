@@ -8,7 +8,8 @@ typedef enum{
    link_cloud_key = 0x81,
    model_key=0x02,
    add_key=0x08,
-   dec_key=0x04
+   dec_key=0x04,
+   power_on_special_key=0xAA
 }key_item_t;
 
 typedef enum _time_t{
