@@ -33,6 +33,8 @@ static void Timing_Handler(void);
 //static void Power_Off_Fun(void);
 static void Power_On_Fun(void);
 static void Setup_Timer_Times(void);
+static void Works_Counter_Time(void);
+
 
 /************************************************************************
 	*
@@ -68,7 +70,7 @@ void Process_Key_Handler(uint8_t keylabel)
 		    run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
             run_t.wifi_led_fast_blink_flag=0;
             run_t.Timer_mode_flag = 0;
-
+			run_t.works_counter_time_value=0;
 			run_t.panel_key_setup_timer_flag=0;
             run_t.wifi_set_temp_flag=0;
 			run_t.timer_timing_define_flag = timing_not_definition;
@@ -384,6 +386,7 @@ static void Timing_Handler(void)
 			if(run_t.dispTime_minutes > 59){
 				run_t.dispTime_minutes=0;
 				run_t.dispTime_hours ++;
+			    run_t.works_counter_time_value++; //works two hours ,after stop 10 minutes, than works 
 				if(run_t.dispTime_hours >23){
 					run_t.dispTime_hours=0;
 
@@ -408,6 +411,8 @@ static void Timing_Handler(void)
 	else{
 		Setup_Timer_Times();
 	}
+
+	Works_Counter_Time();
 		
 }
 
@@ -458,6 +463,31 @@ static void Setup_Timer_Times(void)
 	  
 	   }
 }
+
+static void Works_Counter_Time(void)
+{
+  if(run_t.timer_timing_define_flag == timing_success){
+	  if(run_t.gTimer_minute_Counter >0){ //minute
+		
+		run_t.gTimer_minute_Counter=0;
+
+		run_t.dispTime_minutes ++;//run_t.dispTime_minute++;
+		if(run_t.dispTime_minutes > 59){
+			run_t.dispTime_minutes=0;
+			run_t.dispTime_hours ++;
+		    run_t.works_counter_time_value++;
+		if(run_t.dispTime_hours >23){
+			run_t.dispTime_hours=0;
+
+		}
+
+		}
+
+
+	  }
+  }
+}
+
 /******************************************************************************
 *
 *Function Name:void RunPocess_Command_Handler(void)
@@ -468,6 +498,7 @@ static void Setup_Timer_Times(void)
 void RunPocess_Command_Handler(void)
 {
    //key input run function
+   static uint8_t works_break_flag;
    static uint8_t key_set_temp_flag,temp1,temp2,decade_temp,unit_temp;
    static uint8_t link_wifi_success,send_set_temperature_value;
    if(run_t.gPower_On ==1 && run_t.decodeFlag ==0){
@@ -503,7 +534,7 @@ void RunPocess_Command_Handler(void)
 	   if(run_t.gModel == 1){ //as is "Ai mode"
 
 
-          if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay >59){
+          if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay > 2){
                run_t.gTimer_temp_delay =0;
 		 
 		  
@@ -572,6 +603,7 @@ void RunPocess_Command_Handler(void)
 	 	
 	      Breath_Led();
 	      run_t.gPower_On =0xff;
+         
          if(run_t.gFan_RunContinue == 1){
            if(run_t.fan_off_60s < 61){
 		      LED_MODEL_OFF();
@@ -609,12 +641,27 @@ void RunPocess_Command_Handler(void)
           // SendData_Set_Command(WIFI_CONNECT_SUCCESS);
 
      }
-    if(run_t.gPower_On ==0 || run_t.gPower_On ==0xFF){
 
-       run_t.process_run_guarantee_flag=1;
-       IWDG_Feed();
+	 //works Two hours after stop 10 minutes 
+	 if(run_t.works_counter_time_value > 2 || run_t.works_counter_time_value==2){
+	 	      if(works_break_flag==0){
+			  	  works_break_flag++;
+				  run_t.gTimer_work_break_times=0;
+                  SendData_PowerOff(0x55); //
+	 	      }
 
-	}
+	         if(run_t.gTimer_work_break_times > 9){
+                run_t.gTimer_work_break_times=0;
+				 works_break_flag=0;
+			     run_t.works_counter_time_value=0;
+                 SendData_PowerOff(0xAA); //
+
+			 }
+	         
+
+
+	 }
+  
   
 }
 /******************************************************************************

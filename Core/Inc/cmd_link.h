@@ -34,8 +34,8 @@ void SendData_Time_Data(uint8_t tdata);
 
 void SendData_Buzzer(void);
 
-void USART1_Cmd_Error_Handler(void);
 
+void USART1_Cmd_Error_Handler(void);
 
 
 

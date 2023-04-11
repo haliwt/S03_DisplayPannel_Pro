@@ -96,7 +96,6 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM3_Init();
   delay_init(24);
-  IWDG_Init(IWDG_PRESCALER_128,2000);//8s =(128*2000)/32(ms)=8000
 
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
@@ -131,12 +130,11 @@ int main(void)
            }
            else
             {
-              run_t.key_read_value  = KEY_Scan();
-
-			  USART1_Cmd_Error_Handler();
-	          Process_Key_Handler(run_t.key_read_value);
+              key_read_value  = KEY_Scan();
+             Process_Key_Handler(key_read_value);
 			  
 	         RunPocess_Command_Handler();
+             USART1_Cmd_Error_Handler();
                 
                 
             }

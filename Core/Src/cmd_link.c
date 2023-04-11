@@ -302,39 +302,32 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 *******************************************************************************/
 void USART1_Cmd_Error_Handler(void)
 {
-                  uint32_t temp;
-	 static uint8_t repeat_power_on;
+    uint32_t temp;
+	 static uint8_t error_usart_flag ;
 
-        if(run_t.gTimer_usart_error > 2){
+
+        if(run_t.gTimer_usart_error > 25){
 			run_t.gTimer_usart_error=0;
-			__HAL_UART_GET_FLAG(&huart1,UART_FLAG_ORE);
-	         if(UART_FLAG_ORE==1){
-	          __HAL_UART_CLEAR_OREFLAG(&huart1);
+			  __HAL_UART_GET_FLAG(&huart1,UART_FLAG_ORE);//UART_FLAG_NE
+                 __HAL_UART_GET_FLAG(&huart1,UART_FLAG_NE); //USART_ISR_FE
+                 __HAL_UART_GET_FLAG(&huart1,USART_ISR_FE);
+	         if(UART_FLAG_ORE==1 || UART_FLAG_NE==1 ||USART_ISR_FE==1 ||error_usart_flag == 1 ){
+	           __HAL_UART_CLEAR_OREFLAG(&huart1);
+               __HAL_UART_CLEAR_NEFLAG(&huart1);
+               __HAL_UART_CLEAR_FEFLAG(&huart1);
 	          temp =USART1->ISR;
 	          temp = USART1->RDR;
-	          IWDG_Init(IWDG_PRESCALER_128,2000);//8s =(128*2000)/32(ms)=8000
-	          MX_USART1_UART_Init();
-			  HAL_Delay(5);
-	          repeat_power_on=1;
-			  run_t.gPower_repeat_times_flag =0;
+	           HAL_Delay(5);
+	      
+			  error_usart_flag =0;
 			  UART_Start_Receive_IT(&huart1,inputBuf,1);
 	          
 	          
 	         }
          }
-         if(repeat_power_on==1){
-             run_t.key_read_value = power_on_special_key;
-         }
-     
-       
-
-         if(run_t.gPower_repeat_times_flag ==1){
-                  repeat_power_on=2;
-
-         }
-          
-          
-     if(run_t.gTimer_iwdg > 1){
+        
+      
+     if(run_t.gTimer_iwdg > 20){
           run_t.gTimer_iwdg = 0;
           SendData_Set_Command(0xB0);
      }
@@ -343,27 +336,24 @@ void USART1_Cmd_Error_Handler(void)
        run_t.process_run_guarantee_flag=0;
        run_t.iwdg_feed_success_flag =1;
        run_t.gTimer_check_iwdg_flag =0;
-       IWDG_Feed();
+     
      
      }
-     if(run_t.gTimer_check_iwdg_flag >3){
+     
+     if(run_t.gTimer_check_iwdg_flag >23){
          run_t.gTimer_check_iwdg_flag=0;
          if(run_t.iwdg_feed_success_flag==1){
             run_t.iwdg_feed_success_flag=0;
+             error_usart_flag =0;
          
          }
          else{
-             run_t.key_read_value = power_on_special_key;
-             run_t.gPower_repeat_times_flag =0;
-         	 IWDG_Init(IWDG_PRESCALER_128,2000);//8s =(128*2000)/32(ms)=8000
-             MX_USART1_UART_Init();
-			 HAL_Delay(5);
-             repeat_power_on=1;
-		     UART_Start_Receive_IT(&huart1,inputBuf,1);
+             error_usart_flag =1;
           
          }
      
      }
+	
 
 }
 /********************************************************************************
