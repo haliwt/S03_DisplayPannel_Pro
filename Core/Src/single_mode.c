@@ -46,7 +46,7 @@ static void Works_Counter_Time(void);
 ************************************************************************/
 void Process_Key_Handler(uint8_t keylabel)
 {
-    static uint8_t power_on_flag_times;
+    static uint8_t power_on_flag_times,power_on_fisrt_flag;
     static uint8_t set_timer_flag,temp_bit_1_hours,temp_bit_2_hours,temp_bit_1_minute,temp_bit_2_minute;
   
     switch(keylabel){
@@ -134,7 +134,13 @@ void Process_Key_Handler(uint8_t keylabel)
 				}
 				
 				if(run_t.wifi_set_temperature > 40)run_t.wifi_set_temperature= 20;
-				
+
+				if(power_on_fisrt_flag ==0){
+				     power_on_fisrt_flag ++;
+			     	run_t.wifi_set_temperature =40;
+
+
+			      }
             
 			    decade_temp =  run_t.wifi_set_temperature / 10 ;
 				unit_temp =  run_t.wifi_set_temperature % 10; //
@@ -205,6 +211,13 @@ void Process_Key_Handler(uint8_t keylabel)
 			run_t.wifi_set_temperature--;
 			if(run_t.wifi_set_temperature<20) run_t.wifi_set_temperature=40;
 	        if(run_t.wifi_set_temperature >40)run_t.wifi_set_temperature=40;
+
+			if(power_on_fisrt_flag ==0){
+				power_on_fisrt_flag ++;
+			  run_t.wifi_set_temperature =40;
+
+
+			}
 
 	        decade_temp =  run_t.wifi_set_temperature / 10;
 			unit_temp =  run_t.wifi_set_temperature % 10; //
@@ -366,6 +379,12 @@ static void Power_On_Fun(void)
 
 	 lcd_t.number6_low = (run_t.dispTime_hours ) %10;;
 	 lcd_t.number6_high = (run_t.dispTime_hours ) %10;
+     
+     lcd_t.number7_low = (run_t.dispTime_minutes )/10;
+	 lcd_t.number7_high = (run_t.dispTime_minutes )/10;
+
+	 lcd_t.number8_low = (run_t.dispTime_minutes )%10;
+	 lcd_t.number8_high = (run_t.dispTime_minutes )%10;
 	
 	 
 
@@ -510,7 +529,7 @@ static void Works_Counter_Time(void)
 void RunPocess_Command_Handler(void)
 {
    //key input run function
-   static uint8_t works_break_flag;
+   static uint8_t works_break_flag,power_on_fisrt_send_temperature_value;
    static uint8_t key_set_temp_flag,temp1,temp2,decade_temp,unit_temp;
    static uint8_t link_wifi_success,send_set_temperature_value;
    if(run_t.gPower_On ==1 && run_t.decodeFlag ==0){
@@ -519,6 +538,8 @@ void RunPocess_Command_Handler(void)
 	    Lcd_PowerOn_Fun();
 	    Timing_Handler();
 	    DisplayPanel_Ref_Handler();
+
+		
        //Enable digital "1,2" -> blink LED
 	   if(run_t.panel_key_setup_timer_flag==1){
            run_t.panel_key_setup_timer_flag=0;
@@ -637,6 +658,12 @@ void RunPocess_Command_Handler(void)
     if(run_t.gTimer_set_temp_times >9 && run_t.gPower_On==1){ // 4s
 	     run_t.gTimer_set_temp_times=0;
 		 if(run_t.wifi_set_temperature==0)run_t.wifi_set_temperature=20;
+		 if(power_on_fisrt_send_temperature_value ==0){
+		       power_on_fisrt_send_temperature_value++;
+		     run_t.wifi_set_temperature=40;
+
+
+		 }
 		  if(run_t.wifi_set_temperature_value_flag != 1){
 		  	  SendData_Temp_Data(run_t.wifi_set_temperature);
                HAL_Delay(10);
@@ -872,13 +899,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 
 			run_t.panel_key_setup_timer_flag=1;
 
-		    //  run_t.wifi_set_temp_flag = 1;
-
-			//run_t.wifi_set_temperature = run_t.wifi_set_oneself_temperature;
-
-
-			 //  temperature_decade= run_t.wifi_set_temperature /10 ;
-			//  temperature_unit = run_t.wifi_set_temperature %10;
+		  
 			  run_t.wifi_set_temperature_value_flag =1;
 
 			  run_t.wifi_set_temperature = run_t.wifi_set_oneself_temperature;
