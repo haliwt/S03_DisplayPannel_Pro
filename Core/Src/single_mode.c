@@ -73,8 +73,7 @@ void Process_Key_Handler(uint8_t keylabel)
 			run_t.works_counter_time_value=0;
 			run_t.panel_key_setup_timer_flag=0;
             run_t.wifi_set_temp_flag=0;
-			run_t.dispTime_minutes=0;
-			run_t.dispTime_hours=0 ;
+		
 			run_t.timer_timing_define_flag = timing_not_definition;
 		 
 
@@ -83,14 +82,6 @@ void Process_Key_Handler(uint8_t keylabel)
 
 	  break;
 
-	  case power_on_special_key:
-	          run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
-		 	  SendData_PowerOnOff(0xAA); //POWER ON 
-              HAL_Delay(200);
-		      Power_On_Fun();
-			  run_t.gPower_repeat_times_flag =1;
-
-	  break;
 
 	  case link_cloud_key:
          run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
@@ -367,6 +358,8 @@ static void Power_On_Fun(void)
 	 run_t.gTimer_minute_Counter=0;
      run_t.gTimer_timing=0;
 
+	 if(lcd_t.display_beijing_time_flag == 0){
+
 	 run_t.dispTime_seconds=0;
 	 run_t.dispTime_hours=0;
      run_t.dispTime_minutes=0;
@@ -387,7 +380,7 @@ static void Power_On_Fun(void)
 	 lcd_t.number8_high = (run_t.dispTime_minutes )%10;
 	
 	 
-
+	 }
 
 }
   
@@ -862,6 +855,8 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 			lcd_t.number8_high = (run_t.dispTime_minutes )%10;
               HAL_Delay(5);
 	        DisplayPanel_Ref_Handler();
+
+			lcd_t.display_beijing_time_flag = 1;
 	      }
          }
 		    

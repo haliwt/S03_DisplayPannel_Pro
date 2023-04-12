@@ -20,7 +20,7 @@ uint8_t tim3,tim14;
 *******************************************************************************/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  static uint8_t tm0,tm1,tm2;
+  static uint8_t tm0,tm1;
     
    if(htim->Instance==TIM3){
     
@@ -40,7 +40,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     if(tm0>99){ //100 *10ms = 1000ms = 1s
 		tm0=0;
-		tm2++;
+		
 		
 		run_t.fan_off_60s++;
         run_t.gTimer_wifi_connect_counter++;
@@ -59,16 +59,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	    if(run_t.dispTime_seconds >59){//60s ->1 minute 
 	      run_t.dispTime_seconds=0;
 		  run_t.gTimer_minute_Counter ++;
-		  
+		  run_t.gTimer_work_break_times++;
 		 
 		 }
 
 		
-		if(tm2> 59){
-			tm2=0;
-			run_t.gTimer_work_break_times++;
-
-		}
+		
 	   
      
 

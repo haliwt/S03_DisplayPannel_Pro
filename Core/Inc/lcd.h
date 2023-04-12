@@ -77,6 +77,9 @@ typedef struct _LCD_Ref{
 
 	 uint8_t gTimer_wifi_500ms;
 	 uint8_t gTimer_fan_10ms;
+     uint8_t display_beijing_time_flag ;
+
+	 
 	 uint8_t number1_low;
 	 uint8_t number1_high;
 	 uint8_t number2_low;
