@@ -268,12 +268,12 @@ void DisplayPanel_Ref_Handler(void)
          }
 		 else{ //be detected of wifi signal fast blink wiif icon
 
-             if(lcd_t.gTimer_wifi_500ms >19 && lcd_t.gTimer_wifi_500ms<40){ //400ms
+             if(lcd_t.gTimer_wifi_500ms >14 && lcd_t.gTimer_wifi_500ms<30){ //400ms
 		          
 		           TM1723_Write_Display_Data(0xC5,(WIFI_Symbol+lcdNumber3_Low[lcd_t.number3_low] + lcdNumber4_High[lcd_t.number4_high]) & 0xff); //Wifi
 					
 			 }
-		     else if(lcd_t.gTimer_wifi_500ms <20){
+		     else if(lcd_t.gTimer_wifi_500ms <15){
 			 	 
 		         TM1723_Write_Display_Data(0xC5,(WIFI_NO_Symbol+lcdNumber3_Low[lcd_t.number3_low] + lcdNumber4_High[lcd_t.number4_high]) & 0xff); //Wifi 
 	            
