@@ -12,6 +12,8 @@ enum Signal{
 	WIFI_CMD,
 	WIFI_WIND_SPEED,
 	WIFI_BEIJING_TIME,
+	WIFI_SET_GMT_MINUTE,
+	WIFI_SET_GMT_SECOND,
 	WIFI_SET_TIMING,
 	WIFI_SET_TEMPERATURE
 	
@@ -23,7 +25,7 @@ extern uint8_t inputBuf[MAX_BUFFER_SIZE];
 extern uint8_t outputBuf[8];
 
 
-void SendData_PowerOff(uint8_t index);
+void SendData_PowerOnOff(uint8_t index);
 
 void SendData_Set_Wifi(uint8_t hdata);
 

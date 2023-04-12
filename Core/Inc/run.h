@@ -97,6 +97,10 @@ typedef struct __RUN{
    //works two houre after stop 10 minute
    uint8_t works_counter_time_value;
    uint8_t gTimer_work_break_times;
+   //beijing times
+   uint8_t gmt_time_hours;
+   uint8_t  gmt_time_minutes;
+   uint8_t  gmt_time_seconds;
 
  
    

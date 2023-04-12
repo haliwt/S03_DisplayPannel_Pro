@@ -5,6 +5,7 @@
 #include "display.h"
 #include "led.h"
 #include "single_mode.h"
+#include "lcd.h"
 
 
 volatile static uint8_t transOngoingFlag; //interrupt Transmit flag bit , 1---stop,0--run
@@ -22,7 +23,7 @@ uint8_t inputBuf[MAX_BUFFER_SIZE];
 *Return Ref:NO
 *
 ****************************************************************************************************/
-void SendData_PowerOff(uint8_t index)
+void SendData_PowerOnOff(uint8_t index)
 {
 	
    //crc=0x55;
@@ -166,7 +167,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			break;
 		case 2://#2
 			if(inputBuf[0]=='D' || inputBuf[0]=='W'   || inputBuf[0]=='P' ||inputBuf[0] =='C' || inputBuf[0] == 'B' \
-			 ||inputBuf[0] == 'S' || inputBuf[0]=='T'||inputBuf[0]=='E') //'D'->data , 'W' ->wifi
+			 ||inputBuf[0] == 'S' || inputBuf[0]=='T'||inputBuf[0]=='E'|| inputBuf[0] =='N'|| inputBuf[0] =='M') //'D'->data , 'W' ->wifi
 			{
 				
 				if(inputBuf[0]=='D') run_t.single_data=PANEL_DATA; //receive data is single data
@@ -177,6 +178,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				else if(inputBuf[0]=='S') run_t.single_data = WIFI_WIND_SPEED;
 				else if(inputBuf[0]=='T') run_t.single_data = WIFI_SET_TIMING;
 				else if(inputBuf[0]=='E') run_t.single_data = WIFI_SET_TEMPERATURE;
+				else if(inputBuf[0]=='M') run_t.single_data = WIFI_SET_GMT_MINUTE;
+				else if(inputBuf[0]=='N') run_t.single_data = WIFI_SET_GMT_SECOND;
 			    state=3;
 			}
 			else
@@ -220,11 +223,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                  run_t.decodeFlag=1; 
 
              break;
-			 case WIFI_BEIJING_TIME:
-			 	if(run_t.timer_timing_define_flag == timing_not_definition && run_t.temp_set_timer_timing_flag==0)
-			  	    run_t.dispTime_hours  = inputBuf[0];
-                 state = 4; 
-             break;
+			
 
              case WIFI_SET_TIMING:
              		run_t.dispTime_hours  = inputBuf[0];
@@ -237,6 +236,53 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			     run_t.wifi_set_oneself_temperature=inputBuf[0]; 
                  state=0;
                  run_t.decodeFlag=1;
+
+			 break;
+
+
+			  case WIFI_BEIJING_TIME:
+			 	if(run_t.timer_timing_define_flag == timing_not_definition ){
+			  	    run_t.gmt_time_hours =inputBuf[0];
+                    run_t.dispTime_hours  = inputBuf[0];
+				
+					 state=0;
+		             run_t.decodeFlag=1;
+                }
+				else
+					state = 0;
+                 
+             break;
+
+			 case  WIFI_SET_GMT_MINUTE:
+			 	if(run_t.timer_timing_define_flag == timing_not_definition ){
+			 	  run_t.gmt_time_minutes = inputBuf[0];
+				  run_t.dispTime_minutes = inputBuf[0];
+
+				  run_t.single_data = WIFI_BEIJING_TIME;
+
+                  
+				   state=0;
+		           run_t.decodeFlag=1;
+			 		}
+				    else
+			           state = 0;
+
+
+			 break;
+
+			 case WIFI_SET_GMT_SECOND:
+				 if(run_t.timer_timing_define_flag == timing_not_definition ){
+
+		
+	                 run_t.gmt_time_seconds = inputBuf[0] + 1;
+					 run_t.dispTime_seconds = inputBuf[0] + 1;
+					 run_t.decodeFlag=1;
+				    state=0;
+				 	}
+				    else 
+						state = 0;
+		 
+                 
 
 			 break;
 
@@ -261,25 +307,21 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		    break;
 
                 case WIFI_BEIJING_TIME:
-		 
-		 	  if(run_t.timer_timing_define_flag == timing_not_definition && run_t.temp_set_timer_timing_flag==0)
+		           run_t.gmt_time_minutes = inputBuf[0];
 				   run_t.dispTime_minutes = inputBuf[0];
-				state =5;
+
+
+                  
+				   state=0;
+		           run_t.decodeFlag=1;
+	
 		 
 		     break;
 			}
 
 		 break;
            
-        case 5: 
-			if(run_t.single_data == WIFI_BEIJING_TIME){
-				 run_t.dispTime_seconds = inputBuf[0] + 2;
-				 run_t.decodeFlag=1;
-			    state=0;
-		 }
-            
-        break;
-
+    
 		
 		
 		default:
@@ -306,7 +348,7 @@ void USART1_Cmd_Error_Handler(void)
 	 static uint8_t error_usart_flag ;
 
 
-        if(run_t.gTimer_usart_error > 25){
+        if(run_t.gTimer_usart_error > 240){
 			run_t.gTimer_usart_error=0;
 			  __HAL_UART_GET_FLAG(&huart1,UART_FLAG_ORE);//UART_FLAG_NE
                  __HAL_UART_GET_FLAG(&huart1,UART_FLAG_NE); //USART_ISR_FE
@@ -321,13 +363,14 @@ void USART1_Cmd_Error_Handler(void)
 	      
 			  error_usart_flag =0;
 			  UART_Start_Receive_IT(&huart1,inputBuf,1);
+			
 	          
 	          
 	         }
          }
         
       
-     if(run_t.gTimer_iwdg > 20){
+     if(run_t.gTimer_iwdg > 183){
           run_t.gTimer_iwdg = 0;
           SendData_Set_Command(0xB0);
      }
@@ -340,7 +383,7 @@ void USART1_Cmd_Error_Handler(void)
      
      }
      
-     if(run_t.gTimer_check_iwdg_flag >23){
+     if(run_t.gTimer_check_iwdg_flag >188){
          run_t.gTimer_check_iwdg_flag=0;
          if(run_t.iwdg_feed_success_flag==1){
             run_t.iwdg_feed_success_flag=0;
