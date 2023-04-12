@@ -70,7 +70,7 @@ uint8_t KEY_Scan(void)
 					
                    
                  }
-				 else if(++key_t.on_time>5 && ++key_t.on_time <20 ){
+				 else if(++key_t.on_time>200 && ++key_t.on_time <500){
 
 					key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
 					key_t.on_time = 0;                        //key .value = 0xEF ^ 0XFF = 0X10
@@ -91,7 +91,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == key_t.buffer) //again adjust key if be pressed down 
 			{
-				if(++key_t.on_time> 0x64 && run_t.gPower_On==1)// 500 long key be down
+				if(++key_t.on_time> 600 && run_t.gPower_On==1)// 500 long key be down
 				{
 					
 					key_t.value = key_t.value|0x80; //key.value = 0x01 | 0x80  =0x81  
@@ -142,6 +142,219 @@ uint8_t KEY_Scan(void)
 		}
 	}
 	return  reval;
+
+
+}
+
+
+
+void Normal_PressKey(void)
+{
+    static uint8_t power_on_flag_times,power_on_fisrt_flag;
+    static uint8_t set_timer_flag,temp_bit_1_hours,temp_bit_2_hours,temp_bit_1_minute,temp_bit_2_minute;
+    uint8_t decade_hour;
+uint8_t unit_hour;
+uint8_t decade_temp;
+uint8_t decade_minute;
+uint8_t unit_minute;
+uint8_t decade_second;
+uint8_t unit_second;
+uint8_t unit_temp ;
+    
+    
+    if(MODE_KEY_VALUE() ==KEY_DOWN ){
+                  HAL_Delay(10);
+				while(MODE_KEY_VALUE() ==KEY_DOWN);
+
+			     if(run_t.gPower_On ==1){
+					SendData_Buzzer();
+				
+					run_t.temp_set_timer_timing_flag=1;//run_t.gModel =2;
+				
+					run_t.gTimer_key_timing=0;
+			
+				
+		        }
+
+     }
+     else if(DEC_KEY_VALUE()==KEY_DOWN )
+	{
+		HAL_Delay(10);
+        while(DEC_KEY_VALUE()==KEY_DOWN);  
+        if(run_t.gPower_On ==1){
+	   	SendData_Buzzer();
+	     switch(run_t.temp_set_timer_timing_flag){
+
+		   case 0: 
+	
+	        run_t.wifi_set_temperature_value_flag =0;
+			run_t.wifi_set_temperature--;
+			if(run_t.wifi_set_temperature<20) run_t.wifi_set_temperature=40;
+	        if(run_t.wifi_set_temperature >40)run_t.wifi_set_temperature=40;
+
+			if(power_on_fisrt_flag ==0){
+				power_on_fisrt_flag ++;
+			  run_t.wifi_set_temperature =40;
+
+
+			}
+
+	        decade_temp =  run_t.wifi_set_temperature / 10;
+			unit_temp =  run_t.wifi_set_temperature % 10; //
+             HAL_Delay(5);
+			lcd_t.number1_low=decade_temp;
+			lcd_t.number1_high =decade_temp;
+
+			lcd_t.number2_low = unit_temp;
+			lcd_t.number2_high = unit_temp;
+			
+			run_t.panel_key_setup_timer_flag = 1;
+	    	
+
+		    break;
+
+			case 1:
+	    
+			
+				run_t.gTimer_key_timing =0;
+                set_timer_flag=0;
+				run_t.timer_time_hours -- ;//run_t.dispTime_minutes = run_t.dispTime_minutes - 1;
+				if(run_t.timer_time_hours < 0){//if(run_t.dispTime_minutes < 0){
+
+				    run_t.timer_time_hours =24;//run_t.dispTime_hours --;
+					
+					
+				}
+				    temp_bit_2_minute = run_t.timer_time_hours /10 ;
+					temp_bit_1_minute = run_t.timer_time_hours %10;
+               
+					temp_bit_2_hours = run_t.timer_time_hours /10 ;
+					temp_bit_1_hours = run_t.timer_time_hours  %10;
+					run_t.timer_time_minutes  =0;
+
+					temp_bit_2_minute=0;
+					temp_bit_1_minute=0;
+                 
+
+					lcd_t.number5_low=temp_bit_2_hours;
+					lcd_t.number5_high =temp_bit_2_hours;
+
+					lcd_t.number6_low = temp_bit_1_hours;
+					lcd_t.number6_high = temp_bit_1_hours;
+
+					lcd_t.number7_low=temp_bit_2_minute;
+					lcd_t.number7_high =temp_bit_2_minute;
+
+					lcd_t.number8_low = temp_bit_1_minute;
+					lcd_t.number8_high = temp_bit_1_minute;
+
+             break;
+
+	    	}
+		}        
+	}
+    else if(ADD_KEY_VALUE() ==KEY_DOWN )
+	{
+		HAL_Delay(10);
+        while(ADD_KEY_VALUE() ==KEY_DOWN);
+        if(run_t.gPower_On ==1){
+		
+			SendData_Buzzer();
+		
+
+		    switch(run_t.temp_set_timer_timing_flag){
+
+			case 0: //set temperature value add number
+      
+				run_t.wifi_set_temperature_value_flag =0;
+				run_t.wifi_set_temperature ++;
+	            if(run_t.wifi_set_temperature < 20){
+				    run_t.wifi_set_temperature=20;
+				}
+				
+				if(run_t.wifi_set_temperature > 40)run_t.wifi_set_temperature= 20;
+
+				if(power_on_fisrt_flag ==0){
+				     power_on_fisrt_flag ++;
+			     	run_t.wifi_set_temperature =40;
+
+
+			      }
+            
+			    decade_temp =  run_t.wifi_set_temperature / 10 ;
+				unit_temp =  run_t.wifi_set_temperature % 10; //
+                
+				lcd_t.number1_low=decade_temp;
+				lcd_t.number1_high =decade_temp;
+
+				lcd_t.number2_low = unit_temp;
+				lcd_t.number2_high = unit_temp;
+
+				run_t.panel_key_setup_timer_flag = 1;
+                
+             
+					
+			
+			   break;
+
+			   case 1:
+				 
+					run_t.gTimer_key_timing =0;
+                    set_timer_flag=0;
+					run_t.timer_time_hours++ ;//run_t.dispTime_minutes = run_t.dispTime_minutes + 60;
+				    if(run_t.timer_time_hours > 24){ //if(run_t.dispTime_minutes > 59){
+
+		                 run_t.timer_time_hours=0;//run_t.dispTime_hours =0;
+		                
+
+					}
+				
+                  
+					temp_bit_2_hours = run_t.timer_time_hours /10 ;
+					temp_bit_1_hours = run_t.timer_time_hours %10;
+					run_t.timer_time_minutes  =0;
+
+					temp_bit_2_minute =0;
+					temp_bit_1_minute =0;
+                    
+					lcd_t.number5_low=temp_bit_2_hours;
+					lcd_t.number5_high =temp_bit_2_hours;
+
+					lcd_t.number6_low = temp_bit_1_hours;
+					lcd_t.number6_high = temp_bit_1_hours;
+
+					lcd_t.number7_low=temp_bit_2_minute;
+					lcd_t.number7_high =temp_bit_2_minute;
+
+					lcd_t.number8_low = temp_bit_1_minute;
+					lcd_t.number8_high = temp_bit_1_minute;
+
+				
+				break;
+				}	
+			
+				
+            }
+        
+	 }
+    else if(run_t.gTimer_key_timing > 4 && run_t.temp_set_timer_timing_flag==1 && set_timer_flag ==0 && run_t.gPower_On==1){
+				run_t.gTimer_digital5678_ms=0;
+			   
+				set_timer_flag++;
+			   run_t.gTimer_key_timing =0;
+			   if(run_t.timer_time_hours  ==0){
+				   run_t.Timer_mode_flag = 0;
+				   run_t.temp_set_timer_timing_flag=0;
+			       run_t.timer_timing_define_flag = timing_not_definition;
+	
+			   }
+			   else{
+				   run_t.Timer_mode_flag = 1;
+					SendData_Time_Data(run_t.dispTime_hours);
+                     HAL_Delay(300);
+			   }
+	
+		}
 
 
 }

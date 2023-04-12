@@ -323,6 +323,7 @@ void DisplayPanel_Ref_Handler(void)
             
             if(timer_timg_flag > 3){
             	run_t.Timer_mode_flag = 0;
+			    run_t.timer_time_minutes = 0;
             	timer_timg_flag=0;
             	run_t.gTimer_timing=0;
             	run_t.temp_set_timer_timing_flag=0;

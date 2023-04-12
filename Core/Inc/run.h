@@ -93,6 +93,7 @@ typedef struct __RUN{
    uint8_t key_read_value;
    uint8_t gTimer_usart_error;
    uint8_t gPower_repeat_times_flag;
+  
 
    //works two houre after stop 10 minute
    uint8_t works_counter_time_value;
@@ -124,6 +125,9 @@ typedef struct __RUN{
     int8_t dispTime_hours;
 	int8_t dispTime_minutes;
 	int8_t dispTime_seconds;
+
+	int8_t  timer_time_hours;
+   int8_t 	timer_time_minutes ;
 
 
 

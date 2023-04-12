@@ -95,7 +95,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM3_Init();
-  delay_init(24);
+  //delay_init(24);
 
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
@@ -128,16 +128,18 @@ int main(void)
              Decode_Function();
                 
            }
-           else
-            {
-              key_read_value  = KEY_Scan();
+          
+
+
+			 key_read_value  = KEY_Scan();
+           //  Normal_PressKey();
              Process_Key_Handler(key_read_value);
 			  
 	         RunPocess_Command_Handler();
              USART1_Cmd_Error_Handler();
                 
                 
-            }
+            
 		  
       }
       
