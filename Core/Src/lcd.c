@@ -326,7 +326,7 @@ void DisplayPanel_Ref_Handler(void)
 			    run_t.timer_time_minutes = 0;
             	timer_timg_flag=0;
             	run_t.gTimer_timing=0;
-            	run_t.temp_set_timer_timing_flag=0;
+            	//run_t.temp_set_timer_timing_flag=0;
             	run_t.timer_timing_define_flag = timing_success;
             }
 	     }

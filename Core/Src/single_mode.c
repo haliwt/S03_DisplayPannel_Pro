@@ -46,7 +46,7 @@ static void Works_Counter_Time(void);
 ************************************************************************/
 void Process_Key_Handler(uint8_t keylabel)
 {
-    static uint8_t power_on_flag_times,power_on_fisrt_flag;
+    static uint8_t power_on_flag_times,power_on_fisrt_flag,changed_lcd_display_model;
     static uint8_t set_timer_flag,temp_bit_1_hours,temp_bit_2_hours,temp_bit_1_minute,temp_bit_2_minute;
   
     switch(keylabel){
@@ -98,10 +98,22 @@ void Process_Key_Handler(uint8_t keylabel)
 	  case model_key:
 		if(run_t.gPower_On ==1){
 			SendData_Buzzer();
+
+		   changed_lcd_display_model = changed_lcd_display_model^ 0x01;
+
+		   if(changed_lcd_display_model==1){
 		
-			run_t.temp_set_timer_timing_flag=1;//run_t.gModel =2;
-		
-			run_t.gTimer_key_timing=0;
+			   run_t.temp_set_timer_timing_flag=1;//run_t.gModel =2;
+			   //run_t.timer_timing_define_flag == timing_success;
+			   run_t.gTimer_key_timing=0;
+		   	}
+		    else{
+
+			   run_t.temp_set_timer_timing_flag=0;//run_t.gModel =2;
+
+				//run_t.timer_timing_define_flag == timing_not_definition;
+			}
+			
 			
 				
 		 }
@@ -278,8 +290,8 @@ void Process_Key_Handler(uint8_t keylabel)
 			   run_t.gTimer_key_timing =0;
 			   if(run_t.timer_time_hours  ==0){
 				   run_t.Timer_mode_flag = 0;
-				   run_t.temp_set_timer_timing_flag=0;
-			       run_t.timer_timing_define_flag = timing_not_definition;
+				   //run_t.temp_set_timer_timing_flag=0;
+			      // run_t.timer_timing_define_flag = timing_not_definition;
 	
 			   }
 			   else{
@@ -404,8 +416,9 @@ static void Timing_Handler(void)
 {
 
 
+	if( run_t.temp_set_timer_timing_flag==0){
 
-    if(run_t.timer_timing_define_flag == timing_not_definition && run_t.temp_set_timer_timing_flag ==0){
+    //if(run_t.timer_timing_define_flag == timing_success){
 	    if(run_t.gTimer_minute_Counter >0){ //minute
 
 			run_t.gTimer_minute_Counter=0;
@@ -422,7 +435,8 @@ static void Timing_Handler(void)
 					}
 
 			}
-
+	    	}
+    	
 			lcd_t.number5_low=(run_t.dispTime_hours ) /10;
 			lcd_t.number5_high =(run_t.dispTime_hours) /10;
 
@@ -435,7 +449,9 @@ static void Timing_Handler(void)
 			lcd_t.number8_low = (run_t.dispTime_minutes )%10;
 			lcd_t.number8_high = (run_t.dispTime_minutes )%10;
 						 
-	    }
+	   
+	
+
 	}
 	else{
 		Setup_Timer_Times();
@@ -448,6 +464,11 @@ static void Timing_Handler(void)
 
 static void Setup_Timer_Times(void)
 {
+
+
+
+
+
 	if(run_t.gTimer_timing > 59){ //
 
 	     run_t.gTimer_timing =0;
@@ -458,7 +479,7 @@ static void Setup_Timer_Times(void)
 
 			if(run_t.timer_time_hours < 0 ){
 
-	          
+	           if(run_t.timer_timing_define_flag == timing_success){
 			    run_t.timer_time_hours=0;
 				run_t.timer_time_minutes=0;
 				run_t.wifi_send_buzzer_sound=0xff;
@@ -468,11 +489,13 @@ static void Setup_Timer_Times(void)
 				run_t.gPower_On =0 ;
 			    run_t.gFan_RunContinue=1;
 				run_t.fan_off_60s = 0;
-				//SendData_PowerOnOff(0);//shut down 
+	           
+	           	}
 				
 		     }
 
 	     }
+		}
 			lcd_t.number5_low=(run_t.timer_time_hours ) /10;
 			lcd_t.number5_high =(run_t.timer_time_hours) /10;
 
@@ -484,11 +507,12 @@ static void Setup_Timer_Times(void)
 
 			lcd_t.number8_low = (run_t.timer_time_minutes)%10;
 			lcd_t.number8_high = (run_t.timer_time_minutes )%10;
+	}
+        
 			
 	  
-	  
-	   }
-}
+	 
+
 /***************************************************************
  * 
  * Function Name:

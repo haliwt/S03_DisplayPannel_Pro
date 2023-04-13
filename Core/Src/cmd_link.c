@@ -351,15 +351,15 @@ void USART1_Cmd_Error_Handler(void)
         if(run_t.gTimer_usart_error > 240){
 			run_t.gTimer_usart_error=0;
 			  __HAL_UART_GET_FLAG(&huart1,UART_FLAG_ORE);//UART_FLAG_NE
-                 __HAL_UART_GET_FLAG(&huart1,UART_FLAG_NE); //USART_ISR_FE
-                 __HAL_UART_GET_FLAG(&huart1,USART_ISR_FE);
-	         if(UART_FLAG_ORE==1 || UART_FLAG_NE==1 ||USART_ISR_FE==1 ||error_usart_flag == 1 ){
+               //  __HAL_UART_GET_FLAG(&huart1,UART_FLAG_NE); //USART_ISR_FE
+               //  __HAL_UART_GET_FLAG(&huart1,USART_ISR_FE);
+	         if(UART_FLAG_ORE==1 || error_usart_flag == 1 ){
 	           __HAL_UART_CLEAR_OREFLAG(&huart1);
-               __HAL_UART_CLEAR_NEFLAG(&huart1);
-               __HAL_UART_CLEAR_FEFLAG(&huart1);
+            //   __HAL_UART_CLEAR_NEFLAG(&huart1);
+           //    __HAL_UART_CLEAR_FEFLAG(&huart1);
 	          temp =USART1->ISR;
 	          temp = USART1->RDR;
-	           HAL_Delay(5);
+	     
 	      
 			  error_usart_flag =0;
 			  UART_Start_Receive_IT(&huart1,inputBuf,1);

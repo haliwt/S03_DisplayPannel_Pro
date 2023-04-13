@@ -132,7 +132,7 @@ int main(void)
 
 
 			 key_read_value  = KEY_Scan();
-           //  Normal_PressKey();
+   
              Process_Key_Handler(key_read_value);
 			  
 	         RunPocess_Command_Handler();
