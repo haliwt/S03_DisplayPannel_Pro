@@ -19,15 +19,9 @@ uint8_t KEY_Scan(void)
  
   key_t.read = _KEY_ALL_OFF; //0xFF 
   
-   if(POWER_KEY_VALUE() ==KEY_DOWN )// high level
-	{
-		key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
-	}
-    else if(MODE_KEY_VALUE() ==KEY_DOWN )
-	{
-		key_t.read &= ~0x02; // 0xFf & 0xfd =  0xFD
-	}
-    else if(DEC_KEY_VALUE()==KEY_DOWN )
+  
+    
+    if(DEC_KEY_VALUE()==KEY_DOWN )
 	{
 		  key_t.read &= ~0x04; // 0xFf & 0xfB =  0xFB
 	}
@@ -35,7 +29,14 @@ uint8_t KEY_Scan(void)
 	{
 		  key_t.read &= ~0x08; // 0x1f & 0xf7 =  0xF7
 	 }
-
+    else if(MODE_KEY_VALUE() ==KEY_DOWN )
+	{
+		key_t.read &= ~0x02; // 0xFf & 0xfd =  0xFD
+	}
+    else if(POWER_KEY_VALUE() ==KEY_DOWN )// high level
+        {
+            key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
+        }
    
 
     switch(key_t.state )
@@ -70,7 +71,7 @@ uint8_t KEY_Scan(void)
 					
                    
                  }
-				 else if(++key_t.on_time>200 && ++key_t.on_time <500){
+				 else if(++key_t.on_time>150 && ++key_t.on_time <500){
 
 					key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
 					key_t.on_time = 0;                        //key .value = 0xEF ^ 0XFF = 0X10

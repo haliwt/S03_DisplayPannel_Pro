@@ -283,15 +283,15 @@ void Process_Key_Handler(uint8_t keylabel)
 
 	}
 	
-	if(run_t.gTimer_key_timing > 4 && run_t.temp_set_timer_timing_flag==1 && set_timer_flag ==0 && run_t.gPower_On==1){
+	if(run_t.gTimer_key_timing > 4 && run_t.gPower_On==1){
 				run_t.gTimer_digital5678_ms=0;
 			   
 				set_timer_flag++;
 			   run_t.gTimer_key_timing =0;
 			   if(run_t.timer_time_hours  ==0){
 				   run_t.Timer_mode_flag = 0;
-				   //run_t.temp_set_timer_timing_flag=0;
-			      // run_t.timer_timing_define_flag = timing_not_definition;
+				   run_t.temp_set_timer_timing_flag=0;
+			       run_t.timer_timing_define_flag = timing_not_definition;
 	
 			   }
 			   else{
@@ -436,7 +436,8 @@ static void Timing_Handler(void)
 
 			}
 	    	}
-    	
+    	  
+                
 			lcd_t.number5_low=(run_t.dispTime_hours ) /10;
 			lcd_t.number5_high =(run_t.dispTime_hours) /10;
 
@@ -449,7 +450,7 @@ static void Timing_Handler(void)
 			lcd_t.number8_low = (run_t.dispTime_minutes )%10;
 			lcd_t.number8_high = (run_t.dispTime_minutes )%10;
 						 
-	   
+            
 	
 
 	}
@@ -467,16 +468,16 @@ static void Setup_Timer_Times(void)
 
 
 
-
+ 
 
 	if(run_t.gTimer_timing > 59){ //
-
-	     run_t.gTimer_timing =0;
+        
+        run_t.gTimer_timing =0;
 		 run_t.timer_time_minutes --;
 	    if(run_t.timer_time_minutes < 0){
 		     run_t.timer_time_hours -- ;
 			 run_t.timer_time_minutes =59;
-
+           
 			if(run_t.timer_time_hours < 0 ){
 
 	           if(run_t.timer_timing_define_flag == timing_success){
@@ -490,12 +491,25 @@ static void Setup_Timer_Times(void)
 			    run_t.gFan_RunContinue=1;
 				run_t.fan_off_60s = 0;
 	           
-	           	}
-				
+	          
+                
+                }
+                 else{
+     
+                     run_t.timer_time_hours =0;
+                     run_t.timer_time_minutes =0;
+                 
+                 }
+                            
+                
+                }
+              }
+            
 		     }
 
-	     }
-		}
+	     
+     
+   
 			lcd_t.number5_low=(run_t.timer_time_hours ) /10;
 			lcd_t.number5_high =(run_t.timer_time_hours) /10;
 
@@ -507,7 +521,7 @@ static void Setup_Timer_Times(void)
 
 			lcd_t.number8_low = (run_t.timer_time_minutes)%10;
 			lcd_t.number8_high = (run_t.timer_time_minutes )%10;
-	}
+}
         
 			
 	  
