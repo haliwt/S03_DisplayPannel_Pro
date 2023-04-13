@@ -241,20 +241,18 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 
 			  case WIFI_BEIJING_TIME:
-			 	if(run_t.timer_timing_define_flag == timing_not_definition ){
+			 	
 			  	    run_t.gmt_time_hours =inputBuf[0];
                     run_t.dispTime_hours  = inputBuf[0];
 				
 					 state=0;
 		             run_t.decodeFlag=1;
-                }
-				else
-					state = 0;
+              
                  
              break;
 
 			 case  WIFI_SET_GMT_MINUTE:
-			 	if(run_t.timer_timing_define_flag == timing_not_definition ){
+			 	
 			 	  run_t.gmt_time_minutes = inputBuf[0];
 				  run_t.dispTime_minutes = inputBuf[0];
 
@@ -263,24 +261,20 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                   
 				   state=0;
 		           run_t.decodeFlag=1;
-			 		}
-				    else
-			           state = 0;
+			 		
 
 
 			 break;
 
 			 case WIFI_SET_GMT_SECOND:
-				 if(run_t.timer_timing_define_flag == timing_not_definition ){
+				
 
 		
 	                 run_t.gmt_time_seconds = inputBuf[0] + 1;
 					 run_t.dispTime_seconds = inputBuf[0] + 1;
 					 run_t.decodeFlag=1;
 				    state=0;
-				 	}
-				    else 
-						state = 0;
+				
 		 
                  
 
