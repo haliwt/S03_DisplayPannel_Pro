@@ -34,6 +34,7 @@ static void Timing_Handler(void);
 static void Power_On_Fun(void);
 static void Setup_Timer_Times(void);
 static void Works_Counter_Time(void);
+void Setup_Timer_Times_Donot_Display(void);
 
 
 /************************************************************************
@@ -46,7 +47,7 @@ static void Works_Counter_Time(void);
 ************************************************************************/
 void Process_Key_Handler(uint8_t keylabel)
 {
-    static uint8_t power_on_flag_times,power_on_fisrt_flag,changed_lcd_display_model;
+    static uint8_t power_on_flag_times,power_on_fisrt_flag,changed_lcd_display_model,display_model;
     static uint8_t set_timer_flag,temp_bit_1_hours,temp_bit_2_hours,temp_bit_1_minute,temp_bit_2_minute;
   
     switch(keylabel){
@@ -104,13 +105,15 @@ void Process_Key_Handler(uint8_t keylabel)
 		   if(changed_lcd_display_model==1){
 		
 			   run_t.temp_set_timer_timing_flag=1;//run_t.gModel =2;
-			   //run_t.timer_timing_define_flag == timing_success;
+			   run_t.display_set_timer_timing  =1;
 			   run_t.gTimer_key_timing=0;
+               set_timer_flag=0;
+               display_model =1;
 		   	}
 		    else{
 
 			   run_t.temp_set_timer_timing_flag=0;//run_t.gModel =2;
-
+               run_t.display_set_timer_timing  =0;
 				//run_t.timer_timing_define_flag == timing_not_definition;
 			}
 			
@@ -127,7 +130,7 @@ void Process_Key_Handler(uint8_t keylabel)
 			SendData_Buzzer();
 		
 
-		    switch(run_t.temp_set_timer_timing_flag){
+		    switch(run_t.display_set_timer_timing){
 
 			case 0: //set temperature value add number
       
@@ -163,7 +166,7 @@ void Process_Key_Handler(uint8_t keylabel)
 			   break;
 
 			   case 1:
-				 
+				    display_model++;
 					run_t.gTimer_key_timing =0;
                     set_timer_flag=0;
 					run_t.timer_time_hours++ ;//run_t.dispTime_minutes = run_t.dispTime_minutes + 60;
@@ -205,7 +208,7 @@ void Process_Key_Handler(uint8_t keylabel)
 	  case dec_key:
 	   if(run_t.gPower_On ==1){
 	   	SendData_Buzzer();
-	     switch(run_t.temp_set_timer_timing_flag){
+	     switch(run_t.display_set_timer_timing){
 
 		   case 0: 
 	
@@ -237,7 +240,7 @@ void Process_Key_Handler(uint8_t keylabel)
 
 			case 1:
 	    
-			
+			    display_model++;
 				run_t.gTimer_key_timing =0;
                 set_timer_flag=0;
 				run_t.timer_time_hours -- ;//run_t.dispTime_minutes = run_t.dispTime_minutes - 1;
@@ -283,22 +286,34 @@ void Process_Key_Handler(uint8_t keylabel)
 
 	}
 	
-	if(run_t.gTimer_key_timing > 4 && run_t.gPower_On==1){
+	if(run_t.gTimer_key_timing > 4 && run_t.gPower_On==1 && set_timer_flag==0){
 				run_t.gTimer_digital5678_ms=0;
 			   
-				set_timer_flag++;
+			   set_timer_flag++;
 			   run_t.gTimer_key_timing =0;
-			   if(run_t.timer_time_hours  ==0){
-				   run_t.Timer_mode_flag = 0;
-				   run_t.temp_set_timer_timing_flag=0;
-			       run_t.timer_timing_define_flag = timing_not_definition;
-	
-			   }
-			   else{
-				   run_t.Timer_mode_flag = 1;
-					SendData_Time_Data(run_t.dispTime_hours);
-                     HAL_Delay(300);
-			   }
+               if(display_model==1 && run_t.timer_time_hours  !=0 ){
+                   
+                   
+                     
+                   
+                   
+                }
+               else{
+                   if(run_t.timer_time_hours  ==0){
+                       run_t.Timer_mode_flag = 0;
+                       run_t.temp_set_timer_timing_flag=0;
+                       run_t.display_set_timer_timing  =0;
+                       run_t.timer_timing_define_flag = timing_not_definition;
+        
+                   }
+                   else{
+                       run_t.Timer_mode_flag = 1;
+                     //  run_t.display_set_timer_timing=1;
+                       run_t.timer_timing_define_flag = timing_success;
+                        SendData_Time_Data(run_t.dispTime_hours);
+                         HAL_Delay(300);
+                   }
+                }
 	
 		}
 
@@ -414,11 +429,10 @@ static void Power_On_Fun(void)
 ************************************************************************/  
 static void Timing_Handler(void)
 {
-
-
-	if( run_t.temp_set_timer_timing_flag==0){
-
-    //if(run_t.timer_timing_define_flag == timing_success){
+     switch(run_t.display_set_timer_timing ){
+         
+     case 0:
+	 	run_t.Timer_mode_flag = 0;
 	    if(run_t.gTimer_minute_Counter >0){ //minute
 
 			run_t.gTimer_minute_Counter=0;
@@ -436,7 +450,7 @@ static void Timing_Handler(void)
 
 			}
 	    	}
-    	  
+            Setup_Timer_Times_Donot_Display();
                 
 			lcd_t.number5_low=(run_t.dispTime_hours ) /10;
 			lcd_t.number5_high =(run_t.dispTime_hours) /10;
@@ -453,16 +467,19 @@ static void Timing_Handler(void)
             
 	
 
-	}
-	else{
+	
+    break;
+    
+    case 1:
+	
 		Setup_Timer_Times();
 		Works_Counter_Time();
-	}
-
 	
+     
+     break;
 		
+    }
 }
-
 static void Setup_Timer_Times(void)
 {
 
@@ -523,9 +540,49 @@ static void Setup_Timer_Times(void)
 			lcd_t.number8_high = (run_t.timer_time_minutes )%10;
 }
         
+void Setup_Timer_Times_Donot_Display(void)
+{
+   if(run_t.gTimer_timing > 59){ //
+        
+        run_t.gTimer_timing =0;
+		 run_t.timer_time_minutes --;
+	    if(run_t.timer_time_minutes < 0){
+		     run_t.timer_time_hours -- ;
+			 run_t.timer_time_minutes =59;
+           
+			if(run_t.timer_time_hours < 0 ){
+
+	           if(run_t.timer_timing_define_flag == timing_success){
+			    run_t.timer_time_hours=0;
+				run_t.timer_time_minutes=0;
+				run_t.wifi_send_buzzer_sound=0xff;
+				Power_Off_Fun();
+
 			
-	  
-	 
+				run_t.gPower_On =0 ;
+			    run_t.gFan_RunContinue=1;
+				run_t.fan_off_60s = 0;
+	           
+	          
+                
+                }
+                 else{
+     
+                     run_t.timer_time_hours =0;
+                     run_t.timer_time_minutes =0;
+                 
+                 }
+                            
+                
+                }
+              }
+            
+		     }
+
+
+
+
+}
 
 /***************************************************************
  * 
