@@ -82,7 +82,7 @@ typedef struct __RUN{
    uint8_t  setup_timer_timing_item;
    uint8_t  wifi_set_oneself_temperature;
    uint8_t   wifi_set_temperature_value_flag;
-   uint8_t send_temperature_tiimes;
+ 
    uint8_t auto_model_shut_off_ptc_flag;
 
    //iwdg ref
@@ -105,8 +105,8 @@ typedef struct __RUN{
    uint8_t  gmt_time_minutes;
    uint8_t  gmt_time_seconds;
    uint8_t display_set_timer_timing;
-   uint8_t display_beijing_time ;
-   uint8_t disply_ai_item ;
+  
+
 
  
    

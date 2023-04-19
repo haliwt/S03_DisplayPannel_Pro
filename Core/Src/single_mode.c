@@ -106,20 +106,13 @@ void Process_Key_Handler(uint8_t keylabel)
 		
                //timer time + don't has ai item
                run_t.display_set_timer_timing = timer_time;
-			 
-		     //  run_t.display_beijing_time = timer_time;
-			 //  run_t.disply_ai_item = ai_not_item;
 			   run_t.gModel=0;
                
 		   	}
 		    else{
                 //beijing time + ai item
                 run_t.display_set_timer_timing = beijing_time;
-			 
-               run_t.display_set_timer_timing  =0;
-			  // run_t.display_beijing_time = beijing_time;
-			 //  run_t.disply_ai_item = ai_item;
-			   run_t.gModel=1;
+	           run_t.gModel=1;
 				
 			}
 			
@@ -635,7 +628,7 @@ void RunPocess_Command_Handler(void)
 		   run_t.setup_timer_flag++;
 
 	       SendData_Time_Data(run_t.dispTime_hours);
-		 HAL_Delay(300);
+		 HAL_Delay(200);
 
 
 	  }
@@ -652,7 +645,7 @@ void RunPocess_Command_Handler(void)
 	   }
 
 	   //digital "1,2" ->display is dhtd11 real temperature value
-	   if(run_t.setup_temperature_value ==0 && key_set_temp_flag ==1){
+	   if(run_t.setup_temperature_value ==0 && key_set_temp_flag ==1 ){
 	   	    key_set_temp_flag = 0;
 
 	        temp1 = run_t.gReal_humtemp[1]/10 %10;  // temperature
@@ -663,13 +656,11 @@ void RunPocess_Command_Handler(void)
 
 			lcd_t.number2_low = temp2;
 			lcd_t.number2_high = temp2;
-			run_t.gTimer_temp_delay =0;
-			run_t.send_temperature_tiimes=0;
-			run_t.temperature_set_flag = 1;
-            
+		
+			
 		}
 	   //set up temparature value 
-	   if(run_t.gModel == 1){ //as is "Ai mode"
+	  
 
 
           if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay > 61){
@@ -679,62 +670,24 @@ void RunPocess_Command_Handler(void)
 		  if(run_t.wifi_set_temperature <= run_t.gReal_humtemp[1] || run_t.gReal_humtemp[1] >39){//envirment temperature
 	  
 				run_t.gDry = 0;
-			
-                if(run_t.send_temperature_tiimes== 0 || run_t.send_temperature_tiimes==1 || run_t.send_temperature_tiimes==2){
-					if(run_t.send_temperature_tiimes==0)run_t.send_temperature_tiimes=2;
-					else
-					   run_t.send_temperature_tiimes++;
-			        SendData_Set_Command(DRY_OFF_NO_BUZZER);
-                    HAL_Delay(200);
+			    SendData_Set_Command(DRY_OFF_NO_BUZZER);
+                 HAL_Delay(200);
 
-                }
-			    
-                
-		  }
-		  else if((run_t.wifi_set_temperature -3) > run_t.gReal_humtemp[1] ||  run_t.gReal_humtemp[1] < 37){
+            }
+			else if((run_t.wifi_set_temperature -3) > run_t.gReal_humtemp[1] ||  run_t.gReal_humtemp[1] < 37){
 	  
 		         run_t.gDry = 1;
 			     
 
-		          if(run_t.send_temperature_tiimes == 0 || run_t.send_temperature_tiimes==1 || run_t.send_temperature_tiimes==2){
-				 	if(run_t.send_temperature_tiimes==0)run_t.send_temperature_tiimes=2;
-					else
-					   run_t.send_temperature_tiimes++;
+		         
 	                SendData_Set_Command(DRY_ON_NO_BUZZER);
                      HAL_Delay(200);
 		         }
 				 
 		  }
-          }
-	   	}
-	  else{
-
-		 if(run_t.gReal_humtemp[1] >39 && run_t.gTimer_temp_delay >119){//envirment temperature
-	            run_t.gTimer_temp_delay =0;
-				run_t.gDry = 0;
-			    run_t.auto_model_shut_off_ptc_flag=1;
-                if(run_t.send_temperature_tiimes== 0 || run_t.send_temperature_tiimes==1 ){
-					   run_t.send_temperature_tiimes++;
-			        SendData_Set_Command(DRY_OFF_NO_BUZZER);
-                     HAL_Delay(200);
-
-                }
-			    
-                
-		  }
-
-		  if(run_t.gReal_humtemp[1] < 36 && run_t.auto_model_shut_off_ptc_flag ==1 &&  run_t.gTimer_temp_delay >119){
-                  run_t.gTimer_temp_delay =0;
-                  run_t.gDry = 1;
-	              SendData_Set_Command(DRY_ON_NO_BUZZER); //PTC turn On
-               HAL_Delay(200);
-             
-             
-           }
-
-
-	  }
-   	}
+        
+	 
+   
    //receive from mainboard data 
 
    if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff ){
@@ -807,9 +760,10 @@ void RunPocess_Command_Handler(void)
 	         
 
 
-	 }
+	      }
   
   
+        }
 }
 /******************************************************************************
 *
