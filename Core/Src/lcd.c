@@ -323,16 +323,22 @@ void DisplayPanel_Ref_Handler(void)
 	      if(run_t.gTimer_digital5678_ms > 4){
             run_t.gTimer_digital5678_ms=0;
              timer_timg_flag++;
+		
+
+		  if(run_t.gTimer_key_timing > 4){
+
+		         run_t.Timer_mode_flag = 0;
+				run_t.timer_time_minutes = 0;
+				
+				run_t.gTimer_timing=0;
+			if(run_t.timer_time_hours !=0)	 
+			      run_t.timer_timing_define_flag = timing_success;
+			  run_t.setup_timer_timing_item=0;
+
+
+		  }
             
-            if(timer_timg_flag > 3){
-            	run_t.Timer_mode_flag = 0;
-			    run_t.timer_time_minutes = 0;
-            	timer_timg_flag=0;
-            	run_t.gTimer_timing=0;
-           
-            	run_t.timer_timing_define_flag = timing_success;
-				run_t.setup_timer_timing_item=0;
-            }
+            
 	     }
      }
      else{

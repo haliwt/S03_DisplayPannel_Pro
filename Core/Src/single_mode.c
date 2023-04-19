@@ -305,36 +305,10 @@ void Process_Key_Handler(uint8_t keylabel)
 
 	}
 	
-	if(run_t.gTimer_key_timing > 4 && run_t.gPower_On==1 && set_timer_flag==0){
-				run_t.gTimer_digital5678_ms=0;
-			   
-			   set_timer_flag++;
-			   run_t.gTimer_key_timing =0;
-               if(display_model==1 && run_t.timer_time_hours  !=0 ){
-                   
-                   
-                     
-                   
-                   
-                }
-               else{
-                   if(run_t.timer_time_hours  ==0){
-                   
-                       run_t.setup_timer_timing_item=0;
-                       run_t.display_set_timer_timing  =0;
-                       run_t.timer_timing_define_flag = timing_not_definition;
-        
-                   }
-                   else{
-                       run_t.Timer_mode_flag = 1;
-                     //  run_t.display_set_timer_timing=1;
-                       run_t.timer_timing_define_flag = timing_success;
-                        SendData_Time_Data(run_t.dispTime_hours);
-                         HAL_Delay(300);
-                   }
-                }
+	    
+                
 	
-		}
+	
 
 }
 
@@ -655,6 +629,15 @@ void RunPocess_Command_Handler(void)
 	    Timing_Handler();
 	    DisplayPanel_Ref_Handler();
 
+      //send timer timing value to main board 
+      if(run_t.timer_timing_define_flag == timing_success){
+
+	       SendData_Time_Data(run_t.dispTime_hours);
+		 HAL_Delay(300);
+
+
+	  }
+        
 		
        //Enable digital "1,2" -> blink LED
         //Enable digital "1,2" -> blink LED
