@@ -100,18 +100,17 @@ void Process_Key_Handler(uint8_t keylabel)
 		if(run_t.gPower_On ==1){
 			SendData_Buzzer();
 
-		   changed_lcd_display_model = changed_lcd_display_model^ 0x01;
-
-		   if(changed_lcd_display_model==1){
+		   if(run_t.display_set_timer_timing == beijing_time){
 		
                //timer time + don't has ai item
                run_t.display_set_timer_timing = timer_time;
 			   run_t.gModel=0;
                
 		   	}
-		    else{
+		    else if(run_t.display_set_timer_timing == timer_time){
                 //beijing time + ai item
                 run_t.display_set_timer_timing = beijing_time;
+             
 	           run_t.gModel=1;
 				
 			}
