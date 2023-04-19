@@ -12,6 +12,8 @@ typedef enum{
 
 }beijing_time_stat;
 
+
+
 typedef enum{
 
    power_key = 0x01,

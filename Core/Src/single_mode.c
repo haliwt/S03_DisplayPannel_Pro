@@ -105,19 +105,20 @@ void Process_Key_Handler(uint8_t keylabel)
 		   if(changed_lcd_display_model==1){
 		
                //timer time + don't has ai item
-			   run_t.temp_set_timer_timing_flag=0;//run_t.gModel =2;
-			   run_t.display_set_timer_timing  =0;
-		       run_t.display_beijing_time = timer_time;
-			   run_t.disply_ai_item = ai_not_item;
+               run_t.display_set_timer_timing = timer_time;
+			 
+		     //  run_t.display_beijing_time = timer_time;
+			 //  run_t.disply_ai_item = ai_not_item;
 			   run_t.gModel=0;
                
 		   	}
 		    else{
                 //beijing time + ai item
-			   run_t.temp_set_timer_timing_flag=0;//run_t.gModel =2;
+                run_t.display_set_timer_timing = beijing_time;
+			 
                run_t.display_set_timer_timing  =0;
-			   run_t.display_beijing_time = beijing_time;
-			   run_t.disply_ai_item = ai_item;
+			  // run_t.display_beijing_time = beijing_time;
+			 //  run_t.disply_ai_item = ai_item;
 			   run_t.gModel=1;
 				
 			}
@@ -131,8 +132,9 @@ void Process_Key_Handler(uint8_t keylabel)
 
 	  case model_long_key:
 	  	if(run_t.gPower_On ==1){
-		   run_t.temp_set_timer_timing_flag=1;//run_t.gModel =2;
-		   run_t.display_set_timer_timing  =1;
+			run_t.gModel=0;
+		   run_t.setup_timer_timing_item=1;//run_t.gModel =2;
+		   run_t.display_set_timer_timing  =timer_time;
 		   run_t.gTimer_key_timing=0;
 		   set_timer_flag=0;
            display_model =1;
@@ -146,7 +148,7 @@ void Process_Key_Handler(uint8_t keylabel)
 			SendData_Buzzer();
 		
 
-		    switch(run_t.display_set_timer_timing){
+		    switch(run_t.setup_timer_timing_item){
 
 			case 0: //set temperature value add number
       
@@ -224,7 +226,7 @@ void Process_Key_Handler(uint8_t keylabel)
 	  case dec_key:
 	   if(run_t.gPower_On ==1){
 	   	SendData_Buzzer();
-	     switch(run_t.display_set_timer_timing){
+	     switch(run_t.setup_timer_timing_item){
 
 		   case 0: 
 	
@@ -317,7 +319,7 @@ void Process_Key_Handler(uint8_t keylabel)
                else{
                    if(run_t.timer_time_hours  ==0){
                        run_t.Timer_mode_flag = 0;
-                       run_t.temp_set_timer_timing_flag=0;
+                       run_t.setup_timer_timing_item=0;
                        run_t.display_set_timer_timing  =0;
                        run_t.timer_timing_define_flag = timing_not_definition;
         
@@ -403,7 +405,7 @@ static void Power_On_Fun(void)
 
 	 run_t.timer_time_hours =0;
 	 run_t.timer_time_minutes =0;
-	 run_t.temp_set_timer_timing_flag=0;
+	 run_t.setup_timer_timing_item=0;
 
 	 run_t.timer_timing_define_flag = timing_not_definition;
 
@@ -447,7 +449,7 @@ static void Timing_Handler(void)
 {
      switch(run_t.display_set_timer_timing ){
          
-     case 0:
+     case beijing_time:
 	 	run_t.Timer_mode_flag = 0;
 	    if(run_t.gTimer_minute_Counter >0){ //minute
 
@@ -486,7 +488,7 @@ static void Timing_Handler(void)
 	
     break;
     
-    case 1:
+    case timer_time:
 	
 		Setup_Timer_Times();
 		Works_Counter_Time();
