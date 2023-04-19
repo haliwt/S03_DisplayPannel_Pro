@@ -104,17 +104,22 @@ void Process_Key_Handler(uint8_t keylabel)
 
 		   if(changed_lcd_display_model==1){
 		
-			   run_t.temp_set_timer_timing_flag=1;//run_t.gModel =2;
-			   run_t.display_set_timer_timing  =1;
-			   run_t.gTimer_key_timing=0;
-               set_timer_flag=0;
-               display_model =1;
+               //timer time + don't has ai item
+			   run_t.temp_set_timer_timing_flag=0;//run_t.gModel =2;
+			   run_t.display_set_timer_timing  =0;
+		       run_t.display_beijing_time = timer_time;
+			   run_t.disply_ai_item = ai_not_item;
+			   run_t.gModel=0;
+               
 		   	}
 		    else{
-
+                //beijing time + ai item
 			   run_t.temp_set_timer_timing_flag=0;//run_t.gModel =2;
                run_t.display_set_timer_timing  =0;
-				//run_t.timer_timing_define_flag == timing_not_definition;
+			   run_t.display_beijing_time = beijing_time;
+			   run_t.disply_ai_item = ai_item;
+			   run_t.gModel=1;
+				
 			}
 			
 			
@@ -122,6 +127,17 @@ void Process_Key_Handler(uint8_t keylabel)
 		 }
 	  
 
+	  break;
+
+	  case model_long_key:
+	  	if(run_t.gPower_On ==1){
+		   run_t.temp_set_timer_timing_flag=1;//run_t.gModel =2;
+		   run_t.display_set_timer_timing  =1;
+		   run_t.gTimer_key_timing=0;
+		   set_timer_flag=0;
+           display_model =1;
+		   SendData_Buzzer();
+	  	 }
 	  break;
 
 	  case add_key:

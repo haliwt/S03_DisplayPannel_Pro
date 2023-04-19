@@ -34,9 +34,9 @@ uint8_t KEY_Scan(void)
 		key_t.read &= ~0x02; // 0xFf & 0xfd =  0xFD
 	}
     else if(POWER_KEY_VALUE() ==KEY_DOWN )// high level
-        {
-            key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
-        }
+    {
+        key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
+    }
    
 
     switch(key_t.state )
@@ -58,20 +58,7 @@ uint8_t KEY_Scan(void)
 			if(key_t.read == key_t.buffer) // adjust key be down ->continunce be pressed key
 			{
 
-				if(++key_t.on_time> 5000 &&  run_t.power_times==1) //1000  0.5us
-				{
-					
-					run_t.power_times++ ;
-
-					key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
-					key_t.on_time = 0;                        //key .value = 0xEF ^ 0XFF = 0X10
-                   
-					key_t.state   = second;
-				
-					
-                   
-                 }
-				 else if(++key_t.on_time>150 && ++key_t.on_time <500){
+			 if(++key_t.on_time>120 && ++key_t.on_time <500){
 
 					key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
 					key_t.on_time = 0;                        //key .value = 0xEF ^ 0XFF = 0X10
@@ -95,9 +82,9 @@ uint8_t KEY_Scan(void)
 				if(++key_t.on_time> 600 && run_t.gPower_On==1)// 500 long key be down
 				{
 					
-					key_t.value = key_t.value|0x80; //key.value = 0x01 | 0x80  =0x81  
-					key_t.on_time = 0;
-					key_t.state   = finish;
+					key_t.value = key_t.value|0x80; //key.value(power_on) = 0x01 | 0x80  =0x81  
+					key_t.on_time = 0;               //key.vaule(model_key) = 0x01 | 0x80 = 0x82
+					key_t.state   = finish; 
                    
 				}
 			}

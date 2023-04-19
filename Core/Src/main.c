@@ -129,9 +129,7 @@ int main(void)
                 
            }
           
-
-
-			 key_read_value  = KEY_Scan();
+   			key_read_value  = KEY_Scan();
    
              Process_Key_Handler(key_read_value);
 			  

@@ -2,11 +2,22 @@
 #define __SINGLE_MODE_
 #include "main.h"
 
+
+typedef enum{
+
+    beijing_time,
+	timer_time,
+	ai_item,
+	ai_not_item
+
+}beijing_time_stat;
+
 typedef enum{
 
    power_key = 0x01,
-   link_cloud_key = 0x81,
-   model_key=0x02,
+   link_cloud_key = 0x81, //long key
+   model_key=0x02,   //short Key
+   model_long_key= 0x82, //longk key
    add_key=0x08,
    dec_key=0x04,
    power_on_special_key=0xAA

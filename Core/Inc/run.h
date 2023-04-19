@@ -103,6 +103,8 @@ typedef struct __RUN{
    uint8_t  gmt_time_minutes;
    uint8_t  gmt_time_seconds;
    uint8_t display_set_timer_timing;
+   uint8_t display_beijing_time ;
+   uint8_t disply_ai_item ;
 
  
    
