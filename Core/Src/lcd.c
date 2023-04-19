@@ -228,24 +228,7 @@ void DisplayPanel_Ref_Handler(void)
 	// TIM1723_Write_Cmd(0x40);
 	 TIM1723_Write_Cmd(0x44);
 
-    
-    
-	
-    //T1->gModel->0xC3 ,digital "1" an "2"
-//    if(run_t.gModel==1 && run_t.wifi_set_temp_flag ==0){
-//       TM1723_Write_Display_Data(0xC3,lcdNumber1_Low[lcd_t.number1_low]+AI_Symbol+lcdNumber2_High[lcd_t.number2_high]);//display  "AI icon"
-//	  
-//	}
-//	else if(run_t.gModel==0){
-//	     TM1723_Write_Display_Data(0xC3,lcdNumber1_Low[lcd_t.number1_low]+AI_NO_Symbol+lcdNumber2_High[lcd_t.number2_high]);//display  "AI icon"
-//
-//
-//	}
-//	else if(run_t.wifi_set_temp_flag ==0){ 
-//	 	TM1723_Write_Display_Data(0xC3,(lcdNumber1_Low[lcd_t.number1_low]&0x0e)+lcdNumber2_High[lcd_t.number2_high]);//don't display "AI icon"
-//		
-//	}
-	 /***********************setup temperature value ********************************/
+   /***********************setup temperature value ********************************/
 	 //digital 1,2 ->display "temperature"  blink  
 	 if(run_t.wifi_set_temp_flag ==1){
 	     LCD_DisplayNumber_OneTwo_Icon_Handler();
@@ -257,9 +240,9 @@ void DisplayPanel_Ref_Handler(void)
 		
 		//display address 0xC3
 		if(run_t.gModel==1){
-	     TM1723_Write_Display_Data(0xC3,lcdNumber1_Low[lcd_t.number1_low]+AI_NO_Symbol+lcdNumber2_High[lcd_t.number2_high]);//display  "AI icon"
+	     TM1723_Write_Display_Data(0xC3,lcdNumber1_Low[lcd_t.number1_low]+AI_Symbol+lcdNumber2_High[lcd_t.number2_high]);//display  "AI icon"
 		}
-	   else if(run_t.gModel==0){ 
+	   else { 
 	 	TM1723_Write_Display_Data(0xC3,(lcdNumber1_Low[lcd_t.number1_low]&0x0e)+lcdNumber2_High[lcd_t.number2_high]);//don't display "AI icon"
 		
 	    }
