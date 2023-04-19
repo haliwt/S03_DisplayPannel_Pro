@@ -690,25 +690,7 @@ void RunPocess_Command_Handler(void)
    
    //receive from mainboard data 
 
-   if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff ){
-	 	
-	      Breath_Led();
-	      run_t.gPower_On =0xff;
-         
-         if(run_t.gFan_RunContinue == 1){
-           if(run_t.fan_off_60s < 61){
-		      LED_MODEL_OFF();
-			  POWER_ON_LED();
-		      LCD_Display_Wind_Icon_Handler();
-           	}
-		   else{
-               run_t.gFan_RunContinue =0;
-			   Lcd_PowerOff_Fun();
-
-		   }
-
-         }
-    }
+   
     //displayPannel set temperature vale to main board value 
     if(run_t.gTimer_set_temp_times >9 && run_t.gPower_On==1){ // 4s
 	     run_t.gTimer_set_temp_times=0;
@@ -764,6 +746,26 @@ void RunPocess_Command_Handler(void)
   
   
         }
+
+   if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff ){
+	 	
+	      Breath_Led();
+	      run_t.gPower_On =0xff;
+         
+         if(run_t.gFan_RunContinue == 1){
+           if(run_t.fan_off_60s < 61){
+		      LED_MODEL_OFF();
+			  POWER_ON_LED();
+		      LCD_Display_Wind_Icon_Handler();
+           	}
+		   else{
+               run_t.gFan_RunContinue =0;
+			   Lcd_PowerOff_Fun();
+
+		   }
+
+         }
+    }
 }
 /******************************************************************************
 *
