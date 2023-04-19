@@ -73,7 +73,7 @@ void Process_Key_Handler(uint8_t keylabel)
             run_t.Timer_mode_flag = 0;
 			run_t.works_counter_time_value=0;
 			run_t.panel_key_setup_timer_flag=0;
-            run_t.wifi_set_temp_flag=0;
+            run_t.setup_temperature_value=0;
 		    run_t.timer_time_hours =0;
 			run_t.timer_time_minutes =0;
 			run_t.timer_timing_define_flag = timing_not_definition;
@@ -138,6 +138,7 @@ void Process_Key_Handler(uint8_t keylabel)
 		   run_t.gTimer_key_timing=0;
 		   set_timer_flag=0;
            display_model =1;
+		   run_t.Timer_mode_flag=1;
 		   SendData_Buzzer();
 	  	 }
 	  break;
@@ -318,7 +319,7 @@ void Process_Key_Handler(uint8_t keylabel)
                 }
                else{
                    if(run_t.timer_time_hours  ==0){
-                       run_t.Timer_mode_flag = 0;
+                   
                        run_t.setup_timer_timing_item=0;
                        run_t.display_set_timer_timing  =0;
                        run_t.timer_timing_define_flag = timing_not_definition;
@@ -395,7 +396,7 @@ static void Power_On_Fun(void)
 	run_t.gBug =1;
 	
 	run_t.temperature_set_flag = 0; //WT.EDIT 2023.01.31
-    run_t.wifi_set_temp_flag=0; // //WT.EDIT 2023.01.31
+    run_t.setup_temperature_value=0; // //WT.EDIT 2023.01.31
     run_t.disp_wind_speed_grade =3;
 	
 	run_t.wifi_send_buzzer_sound=0xff;
@@ -644,7 +645,7 @@ static void Works_Counter_Time(void)
 void RunPocess_Command_Handler(void)
 {
    //key input run function
-   static uint8_t works_break_flag,power_on_fisrt_send_temperature_value;
+   static uint8_t power_on_fisrt_send_temperature_value,works_break_flag;
    static uint8_t key_set_temp_flag,temp1,temp2,decade_temp,unit_temp;
    static uint8_t link_wifi_success,send_set_temperature_value;
    if(run_t.gPower_On ==1 && run_t.decodeFlag ==0){
@@ -656,21 +657,22 @@ void RunPocess_Command_Handler(void)
 
 		
        //Enable digital "1,2" -> blink LED
+        //Enable digital "1,2" -> blink LED
 	   if(run_t.panel_key_setup_timer_flag==1){
            run_t.panel_key_setup_timer_flag=0;
 		   key_set_temp_flag =1;
-		   run_t.wifi_set_temp_flag=1;
+		  run_t.setup_temperature_value=1;
 		   run_t.gTimer_numbers_one_two_blink=0;
 	     	  
 	   }
 
 	   //digital "1,2" ->display is dhtd11 real temperature value
-	   if(run_t.wifi_set_temp_flag ==0 && key_set_temp_flag ==1){
+	   if(run_t.setup_temperature_value ==0 && key_set_temp_flag ==1){
 	   	    key_set_temp_flag = 0;
 
 	        temp1 = run_t.gReal_humtemp[1]/10 %10;  // temperature
             temp2 = run_t.gReal_humtemp[1]%10;
-           
+
 		    lcd_t.number1_low=temp1;
 			lcd_t.number1_high =temp1;
 
@@ -685,7 +687,7 @@ void RunPocess_Command_Handler(void)
 	   if(run_t.gModel == 1){ //as is "Ai mode"
 
 
-          if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay > 2){
+          if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay > 61){
                run_t.gTimer_temp_delay =0;
 		 
 		  
@@ -912,7 +914,6 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 	       if(run_t.gPower_On ==1){
 		   	   
 
-		     // run_t.wifi_set_temp_flag = 1;
 
 		      temperature_decade= run_t.wifi_set_temperature /10 ;
 			  temperature_unit = run_t.wifi_set_temperature %10;
