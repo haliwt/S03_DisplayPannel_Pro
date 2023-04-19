@@ -331,8 +331,10 @@ void DisplayPanel_Ref_Handler(void)
 				run_t.timer_time_minutes = 0;
 				
 				run_t.gTimer_timing=0;
-			if(run_t.timer_time_hours !=0)	 
+			if(run_t.timer_time_hours !=0){	 
 			      run_t.timer_timing_define_flag = timing_success;
+				  run_t.setup_timer_flag = 1;
+			}
 			  run_t.setup_timer_timing_item=0;
 
 
