@@ -130,6 +130,11 @@ int main(void)
            }
           
    			//key_read_value  = KEY_Scan();
+   			if(run_t.gPower_On ==1){
+
+			    run_t.key_value	= KEY_Scan();
+
+			}
    
              Process_Key_Handler(run_t.key_value);
 			  

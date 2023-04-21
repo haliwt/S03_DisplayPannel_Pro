@@ -30,6 +30,7 @@
 #include "key.h"
 #include "lcd.h"
 /* USER CODE BEGIN 0 */
+uint16_t continue_counter;
 
 /* USER CODE END 0 */
 
@@ -109,15 +110,24 @@ void MX_GPIO_Init(void)
 //void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 {
-    static uint8_t power_on_flag_times,key_has_read_value=0,read_key_value;
+    static uint8_t key_has_read_value=0,read_key_value,key_long=1;
+
     delay_ms(1);      //Ïû¶¶
+  
     switch(GPIO_Pin)
     {
         case TOUCH_KEY_POWER_Pin:
 
-		read_key_value = power_key;
-		key_has_read_value =1;
-            break;
+		if(run_t.gPower_On ==1){
+           return ;
+		
+        }
+		else{
+			read_key_value = power_key;
+			key_has_read_value =1;
+        }
+		
+       break;
         case TOUCH_KEY_MODE_Pin:
              read_key_value = model_key;
 		key_has_read_value =1;
@@ -141,29 +151,29 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 
 	if(key_has_read_value==1){
          key_has_read_value=0;
-
+        continue_counter =0;
 
 	     switch(read_key_value){
 
 		 case power_key:
 		    run_t.key_value= power_key;
-		    read_key_value =0xff;
+		   
 		 break;
 
 		 case model_key:
 			run_t.key_value= model_key;
-			read_key_value =0xff;
+			
 		 break;
 
 		 case add_key:
 		     run_t.key_value= add_key;
-			 read_key_value =0xff;
+			
 
 		 break;
 
 		 case dec_key:
 		    run_t.key_value= dec_key;
-			read_key_value =0xff;
+		
 
 		 break;
 
