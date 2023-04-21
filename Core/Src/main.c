@@ -114,7 +114,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
     if(run_t.power_times == 0){
           run_t.power_times=1;
-		  HAL_Delay(500);
+		  HAL_Delay(50);
 	      run_t.gPower_On=0;
 		  
 	  }
@@ -129,9 +129,9 @@ int main(void)
                 
            }
           
-   			key_read_value  = KEY_Scan();
+   			//key_read_value  = KEY_Scan();
    
-             Process_Key_Handler(key_read_value);
+             Process_Key_Handler(run_t.key_value);
 			  
 	         RunPocess_Command_Handler();
              USART1_Cmd_Error_Handler();

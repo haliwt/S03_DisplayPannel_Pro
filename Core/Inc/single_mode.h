@@ -90,6 +90,7 @@ void RunPocess_Command_Handler(void);
 
 void Receive_MainBoard_Data_Handler(uint8_t cmd);
 
+void Power_On_Fun(void);
 
 void Power_Off_Fun(void);
 

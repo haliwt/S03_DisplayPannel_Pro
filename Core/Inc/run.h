@@ -106,7 +106,8 @@ typedef struct __RUN{
    uint8_t  gmt_time_seconds;
    uint8_t display_set_timer_timing;
   
-
+    //key
+    uint8_t key_value;
 
  
    

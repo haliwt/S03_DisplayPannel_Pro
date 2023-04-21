@@ -72,25 +72,25 @@ void delay_us(uint32_t nus)
 //ÑÓÊ±nus
 //nusÎªÒªÑÓÊ±µÄusÊý.	
 //nus:0~190887435(×î´óÖµ¼´2^32/fac_us@fac_us=22.5)	 
-//void delay_us(uint32_t nus)
-//{		
-//	uint32_t ticks;
-//	uint32_t told,tnow,tcnt=0;
-//	uint32_t reload=SysTick->LOAD;				//LOADµÄÖµ	    	 
-//	ticks=nus*fac_us; 						//ÐèÒªµÄ½ÚÅÄÊý 
-//	told=SysTick->VAL;        				//¸Õ½øÈëÊ±µÄ¼ÆÊýÆ÷Öµ
-//	while(1)
-//	{
-//		tnow=SysTick->VAL;	
-//		if(tnow!=told)
-//		{	    
-//			if(tnow<told)tcnt+=told-tnow;	//ÕâÀï×¢ÒâÒ»ÏÂSYSTICKÊÇÒ»¸öµÝ¼õµÄ¼ÆÊýÆ÷¾Í¿ÉÒÔÁË.
-//			else tcnt+=reload-tnow+told;	    
-//			told=tnow;
-//			if(tcnt>=ticks)break;			//Ê±¼ä³¬¹ý/µÈÓÚÒªÑÓ³ÙµÄÊ±¼ä,ÔòÍË³ö.
-//		}  
-//	};
-//}
+void delay_tick_us(uint32_t nus)
+{		
+	uint32_t ticks;
+	uint32_t told,tnow,tcnt=0;
+	uint32_t reload=SysTick->LOAD;				//LOADµÄÖµ	    	 
+	ticks=nus*fac_us; 						//ÐèÒªµÄ½ÚÅÄÊý 
+	told=SysTick->VAL;        				//¸Õ½øÈëÊ±µÄ¼ÆÊýÆ÷Öµ
+	while(1)
+	{
+		tnow=SysTick->VAL;	
+		if(tnow!=told)
+		{	    
+			if(tnow<told)tcnt+=told-tnow;	//ÕâÀï×¢ÒâÒ»ÏÂSYSTICKÊÇÒ»¸öµÝ¼õµÄ¼ÆÊýÆ÷¾Í¿ÉÒÔÁË.
+			else tcnt+=reload-tnow+told;	    
+			told=tnow;
+			if(tcnt>=ticks)break;			//Ê±¼ä³¬¹ý/µÈÓÚÒªÑÓ³ÙµÄÊ±¼ä,ÔòÍË³ö.
+		}  
+	};
+}
 
 //ÑÓÊ±nms
 //nms:ÒªÑÓÊ±µÄmsÊý

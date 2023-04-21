@@ -39,7 +39,11 @@ extern "C" {
 void MX_GPIO_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+//下面的方式是通过直接操作HAL库函数方式读取IO
+#define POWER_KEY        HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_10)  //KEY0按键PE4
+#define MODE_KEY        HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_11)  //KEY1按键PE3
+#define ADD_KEY        HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_2) 	//KEY2按键PE2
+#define DEC_KEY       HAL_GPIO_ReadPin(GPIOB ,GPIO_PIN_12)  //WKUP按键PA0
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

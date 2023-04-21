@@ -142,19 +142,6 @@ void SysTick_Handler(void)
 /* please refer to the startup file (startup_stm32g0xx.s).                    */
 /******************************************************************************/
 
-/**
-  * @brief This function handles EXTI line 2 and line 3 interrupts.
-  */
-void EXTI2_3_IRQHandler(void)
-{
-  /* USER CODE BEGIN EXTI2_3_IRQn 0 */
-
-  /* USER CODE END EXTI2_3_IRQn 0 */
-//  HAL_GPIO_EXTI_IRQHandler(VK36N4D_INT_Pin);
-  /* USER CODE BEGIN EXTI2_3_IRQn 1 */
-
-  /* USER CODE END EXTI2_3_IRQn 1 */
-}
 
 /**
   * @brief This function handles TIM3 global interrupt.
@@ -185,6 +172,37 @@ void USART1_IRQHandler(void)
 
   /* USER CODE END USART1_IRQn 1 */
 }
+
+/**
+  * @brief This function handles EXTI line 2 and line 3 interrupts.
+  */
+void EXTI2_3_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI2_3_IRQn 0 */
+
+  /* USER CODE END EXTI2_3_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(TOUCH_KEY_ADD_Pin);
+  /* USER CODE BEGIN EXTI2_3_IRQn 1 */
+
+  /* USER CODE END EXTI2_3_IRQn 1 */
+}
+
+/**
+  * @brief This function handles EXTI line 4 to 15 interrupts.
+  */
+void EXTI4_15_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI4_15_IRQn 0 */
+
+  /* USER CODE END EXTI4_15_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(TOUCH_KEY_POWER_Pin);
+  HAL_GPIO_EXTI_IRQHandler(TOUCH_KEY_MODE_Pin);
+  HAL_GPIO_EXTI_IRQHandler(TOUCH_KEY_DEC_Pin);
+  /* USER CODE BEGIN EXTI4_15_IRQn 1 */
+
+  /* USER CODE END EXTI4_15_IRQn 1 */
+}
+
 
 /* USER CODE BEGIN 1 */
 

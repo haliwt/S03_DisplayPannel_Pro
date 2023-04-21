@@ -63,6 +63,22 @@ void Error_Handler(void);
 #define VK36N4D_INT_EXTI_IRQn 			EXTI4_15_IRQn //EXTI2_3_IRQn
 
 
+#define TOUCH_KEY_ADD_Pin 					GPIO_PIN_2
+#define TOUCH_KEY_ADD_GPIO_Port 			GPIOB
+#define TOUCH_KEY_ADD_EXTI_IRQn 			EXTI2_3_IRQn
+
+#define TOUCH_KEY_POWER_Pin 				GPIO_PIN_10
+#define TOUCH_KEY_POWER_GPIO_Port 			GPIOB
+#define TOUCH_KEY_POWER_EXTI_IRQn 				EXTI4_15_IRQn
+
+#define TOUCH_KEY_MODE_Pin 						GPIO_PIN_11
+#define TOUCH_KEY_MODE_GPIO_Port 				GPIOB
+#define TOUCH_KEY_MODE_EXTI_IRQn 					EXTI4_15_IRQn
+
+#define TOUCH_KEY_DEC_Pin 							GPIO_PIN_12
+#define TOUCH_KEY_DEC_GPIO_Port 					GPIOB
+#define TOUCH_KEY_DEC_EXTI_IRQn 					EXTI4_15_IRQn
+
 
 //TM1723 CONTROL GPIO
 #define TM1723_STB_Pin 						GPIO_PIN_4
