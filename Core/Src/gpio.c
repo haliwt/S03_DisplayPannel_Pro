@@ -78,11 +78,11 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-//  /*Configure GPIO pins input : PB2 PB10 PB11 PB12 */
-//  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12;
-//  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-//  GPIO_InitStruct.Pull = GPIO_PULLDOWN ;//GPIO_NOPULL;
-//  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  /*Configure GPIO pins input : PB2 PB10 PB11 PB12 */
+  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN ;//GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 
 
@@ -108,6 +108,7 @@ void MX_GPIO_Init(void)
 //GPIO_Pin:ÖÐ¶ÏÒý½ÅºÅ
 //void HAL_GPIO_EXTI_IRQHandler(uint16_t GPIO_Pin)
 //void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+#if 1
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 {
     static uint8_t key_has_read_value=0,read_key_value,key_long=1;
@@ -119,6 +120,7 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
         case TOUCH_KEY_POWER_Pin:
 
 		if(run_t.gPower_On ==1){
+			
            return ;
 		
         }
@@ -128,24 +130,31 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
         }
 		
        break;
-        case TOUCH_KEY_MODE_Pin:
-             read_key_value = model_key;
-		key_has_read_value =1;
+       case TOUCH_KEY_MODE_Pin:
+	   	 if(run_t.gPower_On ==1){
+             //read_key_value = model_key;
+		    // key_has_read_value =1;
+		       return ;
              
-            
+	   	 	}
             break;
         case TOUCH_KEY_ADD_Pin:
-           read_key_value = add_key;
-		key_has_read_value =1;
+           //read_key_value = add_key;
+		   //key_has_read_value =1;
+		   if(run_t.gPower_On ==1){
+			
+             return ;
+		
+            }
 
 		   
             
             break;
         case TOUCH_KEY_DEC_Pin:
-         
-		read_key_value = dec_key;
-		key_has_read_value =1;
-            
+          if(run_t.gPower_On ==1){
+			read_key_value = dec_key;
+			key_has_read_value =1;
+          	} 
             break;
     }
 
@@ -184,4 +193,5 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 
 	}
 }
+#endif 
 /* USER CODE END 2 */
