@@ -122,29 +122,34 @@ int main(void)
         
        
 			
-		if(run_t.decodeFlag ==1){
+	
+          
+   			//key_read_value  = KEY_Scan();
+   			if(run_t.touch_key_enable==1){
+
+			   // run_t.key_value	= KEY_Scan();
+			   run_t.key_value= Key_BePressed_Fun(1);
+
+   			}
+            else{
+                
+           if(run_t.decodeFlag ==1){
 			  run_t.decodeFlag =0;
 			  run_t.process_run_guarantee_flag=1;
              Decode_Function();
                 
            }
-          
-   			//key_read_value  = KEY_Scan();
-   			if(run_t.gPower_On ==1){
-
-			    run_t.key_value	= KEY_Scan();
-
-			}
-   
              Process_Key_Handler(run_t.key_value);
 			  
 	         RunPocess_Command_Handler();
              USART1_Cmd_Error_Handler();
-                
+            
+       }
+            
                 
             
 		  
-      }
+       }
       
    
   }

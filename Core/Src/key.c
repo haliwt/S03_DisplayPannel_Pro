@@ -58,7 +58,7 @@ uint8_t KEY_Scan(void)
 			if(key_t.read == key_t.buffer) // adjust key be down ->continunce be pressed key
 			{
 
-			 if(++key_t.on_time>100 ){ //120 
+			 if(++key_t.on_time>40 ){ //120 
 
 					key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
 					key_t.on_time = 0;                        //key .value = 0xEF ^ 0XFF = 0X10
@@ -106,7 +106,10 @@ uint8_t KEY_Scan(void)
 			
 			reval = key_t.value; // is short time  TIMER_KEY = 0x01  2. long times TIMER_KEY = 0X81
 			key_t.state   = end;
-         
+            if(INTERRUPT_KEY()==0){
+            
+                   run_t.touch_key_enable=0;
+            }
 			break;
 		}
 		case end:
@@ -134,6 +137,48 @@ uint8_t KEY_Scan(void)
 
 }
 
+//°´¼ü´¦Àíº¯Êý
+//·µ»Ø°´¼üÖµ
+//mode:0,don't has continuce key ;1-> continuce be pressed 
+//0 -> none key be pressed 
+//1 
+//×¢Òâ´Ëº¯ÊýÓÐÏìÓ¦ÓÅÏÈ¼¶,KEY0>KEY1>KEY2>WK_UP!!
+
+uint8_t  Key_BePressed_Fun(uint8_t mode)
+{
+
+    static uint8_t key_up=1;     // key release the button 
+   
+    if(mode==1)key_up=1;    //continue be pressed button
+    
+    if(key_up&&(POWER_KEY() ==1||MODE_KEY()==1||ADD_KEY()==1||DEC_KEY()==1))
+    {
+       delay_tick_us(1000); //delay_ms(5);
+        key_up=0;
+        if(POWER_KEY() ==1){
+			run_t.touch_key_enable=0;
+			return power_key;
+        }
+        else if(MODE_KEY()==1){
+			run_t.touch_key_enable=0;
+			return model_key;
+        }
+        else if(ADD_KEY()==1){
+			run_t.touch_key_enable=0;
+			return add_key;
+        }
+        else if(DEC_KEY()==1){
+			run_t.touch_key_enable=0;
+			return dec_key;  
+        }
+    }
+//	else if(KEY0==1&&KEY1==1&&KEY2==1&&WK_UP==0){
+//		key_up=1;
+//	}
+    run_t.touch_key_enable=0;
+    return 0;   //ÎÞ°´¼ü°´ÏÂ
+
+}
 
 
 

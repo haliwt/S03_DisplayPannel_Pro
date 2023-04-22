@@ -108,7 +108,7 @@ typedef struct __RUN{
   
     //key
     uint8_t key_value;
-
+    uint8_t touch_key_enable;
  
    
    uint8_t Timer_mode_flag;
