@@ -106,9 +106,8 @@ typedef struct __RUN{
    uint8_t  gmt_time_seconds;
    uint8_t display_set_timer_timing;
   
-    //key
-    uint8_t key_value;
-    uint8_t touch_key_enable;
+
+
  
    
    uint8_t Timer_mode_flag;

@@ -20,17 +20,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gpio.h"
-#include "delay.h"
-#include "run.h"
-#include "single_mode.h"
 
-#include "display.h"
-#include "cmd_link.h"
-#include "led.h"
-#include "key.h"
-#include "lcd.h"
 /* USER CODE BEGIN 0 */
-uint16_t continue_counter;
 
 /* USER CODE END 0 */
 
@@ -86,139 +77,18 @@ void MX_GPIO_Init(void)
 
 
 
-//	/*Configure GPIO pins : PBPin PBPin PBPin PBPin */
-//	 GPIO_InitStruct.Pin = TOUCH_KEY_ADD_Pin|TOUCH_KEY_POWER_Pin|TOUCH_KEY_MODE_Pin|TOUCH_KEY_DEC_Pin|GPIO_PIN_13;
-//	 GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-//	 GPIO_InitStruct.Pull = GPIO_NOPULL;
-//	 HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-     
-     /*Configure GPIO pins : PBPin PBPin PBPin PBPin */
-	 GPIO_InitStruct.Pin = GPIO_PIN_13;
-	 GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-	 GPIO_InitStruct.Pull = GPIO_NOPULL;
-	 HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-	
-	 /* EXTI interrupt init*/
-	// HAL_NVIC_SetPriority(EXTI2_3_IRQn, 2, 0);
-	// HAL_NVIC_EnableIRQ(EXTI2_3_IRQn);
-	
-	 HAL_NVIC_SetPriority(EXTI4_15_IRQn, 1, 0);
-	 HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);
-
+//   /*Configure GPIO pin Exit interrupt : PA2 */
+//  GPIO_InitStruct.Pin = GPIO_PIN_2;
+//  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+//  GPIO_InitStruct.Pull = GPIO_NOPULL;
+//  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+//
+//  /* EXTI interrupt init*/
+//  HAL_NVIC_SetPriority(EXTI2_3_IRQn, 4, 4);
+//  HAL_NVIC_EnableIRQ(EXTI2_3_IRQn);
 
 }
 
 /* USER CODE BEGIN 2 */
-//中断服务程序中需要做的事情
-//在HAL库中所有的外部中断服务函数都会调用此函数
-//GPIO_Pin:中断引脚号
-//void HAL_GPIO_EXTI_IRQHandler(uint16_t GPIO_Pin)
-//void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-#if 1
-void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
-{
-    static uint8_t key_has_read_value=0,read_key_value,key_long=1;
 
-    //delay_ms(1);      //消抖
-  
-    switch(GPIO_Pin)
-    {
-        
-        case VK36N4D_INT_Pin:
-             run_t.touch_key_enable = 1;
-        
-
-        
-        break;
-        
-        
-//        case TOUCH_KEY_POWER_Pin:
-
-//		if(run_t.gPower_On ==1){
-//			
-//           return ;
-//		
-//        }
-//		else{
-//			read_key_value = power_key;
-//			key_has_read_value =1;
-//        }
-//		
-//       break;
-//       case TOUCH_KEY_MODE_Pin:
-//	   	 if(run_t.gPower_On ==1){
-//             //read_key_value = model_key;
-//		    // key_has_read_value =1;
-//		       return ;
-//             
-//	   	 	}
-//            break;
-//        case TOUCH_KEY_ADD_Pin:
-//           //read_key_value = add_key;
-//		   //key_has_read_value =1;
-//		   if(run_t.gPower_On ==1){
-//			
-//             return ;
-//		
-//            }
-
-//		   
-//            
-//            break;
-//        case TOUCH_KEY_DEC_Pin:
-//          if(run_t.gPower_On ==1){
-//			//read_key_value = dec_key;
-//			//key_has_read_value =1;
-//			  return ;
-//          	} 
-//            break;
-    }
-
-//	if(key_has_read_value==1){
-//         key_has_read_value=0;
-//        continue_counter =0;
-
-//	     switch(read_key_value){
-
-//		 case power_key:
-//		    run_t.key_value= power_key;
-//		   
-//		 break;
-
-//		 case model_key:
-//			run_t.key_value= model_key;
-//			
-//		 break;
-
-//		 case add_key:
-//		     run_t.key_value= add_key;
-//			
-
-//		 break;
-
-//		 case dec_key:
-//		    run_t.key_value= dec_key;
-//		
-
-//		 break;
-
-//		 
-//		
-
-//	     }
-
-//	}
-//if(INTERRUPT_KEY==0){
-//            
-//                   run_t.touch_key_enable=0;
-//            }
-//     if(run_t.touch_key_enable == 1){
-//     
-//       run_t.key_value	= KEY_Scan();
-//         
-//     
-//     }
-
-}
-#endif 
 /* USER CODE END 2 */

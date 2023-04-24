@@ -31,7 +31,7 @@ static void Receive_Wifi_Cmd(uint8_t cmd);
 static void RunKeyOrder_Handler(void);
 static void Timing_Handler(void);
 //static void Power_Off_Fun(void);
-//static void Power_On_Fun(void);
+static void Power_On_Fun(void);
 static void Setup_Timer_Times(void);
 static void Works_Counter_Time(void);
 void Setup_Timer_Times_Donot_Display(void);
@@ -81,7 +81,7 @@ void Process_Key_Handler(uint8_t keylabel)
 
 		 }
 	  	 
-       run_t.key_value =0xff;
+
 	  break;
 
 
@@ -93,7 +93,7 @@ void Process_Key_Handler(uint8_t keylabel)
 		run_t.wifi_connect_flag =0;
 		run_t.gTimer_wifi_connect_counter=0;
 		
-  
+
 	  break;
 
 	  case model_key:
@@ -104,24 +104,22 @@ void Process_Key_Handler(uint8_t keylabel)
 		
                //timer time + don't has ai item
                run_t.display_set_timer_timing = timer_time;
-			   run_t.setup_timer_timing_item=0;
 			   run_t.gModel=0;
                
 		   	}
 		    else if(run_t.display_set_timer_timing == timer_time){
                 //beijing time + ai item
                 run_t.display_set_timer_timing = beijing_time;
-				run_t.setup_timer_timing_item=0;
              
 	           run_t.gModel=1;
 				
 			}
 			
 			
-			run_t.key_value =0xff;	
+				
 		 }
 	  
-       
+
 	  break;
 
 	  case model_long_key:
@@ -129,14 +127,12 @@ void Process_Key_Handler(uint8_t keylabel)
 			run_t.gModel=0;
 		   run_t.setup_timer_timing_item=1;//run_t.gModel =2;
 		   run_t.display_set_timer_timing  =timer_time;
-		   run_t.gModel=0;
 		   run_t.gTimer_key_timing=0;
+		   set_timer_flag=0;
+           display_model =1;
 		   run_t.Timer_mode_flag=1;
-		
 		   SendData_Buzzer();
-		   run_t.key_value =0xff;
 	  	 }
-		
 	  break;
 
 	  case add_key:
@@ -216,7 +212,7 @@ void Process_Key_Handler(uint8_t keylabel)
 				break;
 				}	
 			
-				run_t.key_value =0xff;
+				
             }
 	  break;
 
@@ -291,7 +287,6 @@ void Process_Key_Handler(uint8_t keylabel)
              break;
 
 	    	}
-		 run_t.key_value =0xff;
 		}
 
 	  break;
@@ -353,7 +348,7 @@ void Process_Key_Handler(uint8_t keylabel)
 
 
 
-void Power_On_Fun(void)
+static void Power_On_Fun(void)
 {
                 
 	run_t.gPower_On=1;
@@ -502,9 +497,7 @@ static void Setup_Timer_Times(void)
                 
                 }
                  else{
-                     
-					 run_t.display_set_timer_timing=beijing_time;
-					 run_t.gModel=1;
+     
                      run_t.timer_time_hours =0;
                      run_t.timer_time_minutes =0;
                  
@@ -632,17 +625,9 @@ void RunPocess_Command_Handler(void)
       //send timer timing value to main board 
       if(run_t.setup_timer_flag==1){
 		   run_t.setup_timer_flag++;
-            run_t.gTimer_timing=0;
-	       if(run_t.timer_time_hours==0){
-               
-               run_t.display_set_timer_timing = beijing_time;
-			   run_t.gModel=1;
-			    run_t.timer_timing_define_flag = timing_not_definition;
-		   }
-           else{
-              // SendData_Time_Data(run_t.timer_time_hours);
-              // HAL_Delay(200);
-           }
+
+	       SendData_Time_Data(run_t.dispTime_hours);
+		 HAL_Delay(200);
 
 
 	  }
@@ -661,7 +646,7 @@ void RunPocess_Command_Handler(void)
 	   //digital "1,2" ->display is dhtd11 real temperature value
 	   if(run_t.setup_temperature_value ==0 && key_set_temp_flag ==1 ){
 	   	    key_set_temp_flag = 0;
-         //   SendData_Time_Data(run_t.timer_time_hours);
+
 	        temp1 = run_t.gReal_humtemp[1]/10 %10;  // temperature
             temp2 = run_t.gReal_humtemp[1]%10;
 
@@ -670,7 +655,7 @@ void RunPocess_Command_Handler(void)
 
 			lcd_t.number2_low = temp2;
 			lcd_t.number2_high = temp2;
-		    
+		
 			
 		}
 	   //set up temparature value 
