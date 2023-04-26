@@ -61,7 +61,7 @@ typedef struct __RUN{
    uint8_t  gDry;
 
    uint8_t  gModel;
-   uint8_t  gBug;
+   uint8_t  gUltransonic;
   
    uint8_t  disp_wind_speed_grade;
    uint8_t  gTimer_fan_counter;

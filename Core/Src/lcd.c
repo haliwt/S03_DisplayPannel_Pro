@@ -252,8 +252,8 @@ void DisplayPanel_Ref_Handler(void)
 	 }
 	 
 	 /**********************************end temperature*****************************************/
-     //T2->WIFI icon -> 0xC5
-     if(run_t.wifi_connect_flag ==0 && run_t.gPower_On==1){ //hasn't wifi run_t.wifi_connect_flag
+     //T2->"WIFI" icon -> 0xC5
+     if(run_t.wifi_connect_flag ==0){   // && run_t.gPower_On==1){ //hasn't wifi run_t.wifi_connect_flag
          if(run_t.wifi_led_fast_blink_flag==0){
 			 if(lcd_t.gTimer_wifi_500ms >99 && lcd_t.gTimer_wifi_500ms<200){
 		          
@@ -295,7 +295,7 @@ void DisplayPanel_Ref_Handler(void)
 		 }
 		
      }
-	 else{//wifi be connect is OK 
+	 else if(run_t.wifi_connect_flag ==1){//wifi be connect is OK 
            run_t.wifi_led_fast_blink_flag=0;
            TM1723_Write_Display_Data(0xC5,(WIFI_Symbol+lcdNumber3_Low[lcd_t.number3_low] + lcdNumber4_High[lcd_t.number4_high]) & 0xff); //Wifi
          //  TIM1723_Write_Cmd(LUM_VALUE);
@@ -567,51 +567,51 @@ static void Display_Kill_Dry_Ster_Icon(void)
 
    //number "1,2" -> temperature
 
-	  if(run_t.gDry==1 && run_t.gPlasma==1 && run_t.gBug==1){
+	  if(run_t.gDry==1 && run_t.gPlasma==1 && run_t.gUltransonic==1){
 
 	     //display address 0xc2
 	     TM1723_Write_Display_Data(0xC2,((0X01+DRY_Symbol+KILL_Symbol+BUG_Symbol)+lcdNumber1_High[lcd_t.number1_high])&0xff);//display digital "temp
 	     
 		 
 	  }
-	  else if(run_t.gDry==0 && run_t.gPlasma==1 && run_t.gBug==1){
+	  else if(run_t.gDry==0 && run_t.gPlasma==1 && run_t.gUltransonic==1){
 
 	      TM1723_Write_Display_Data(0xC2,((0X01+DRY_NO_Symbol+KILL_Symbol+BUG_Symbol))+lcdNumber1_High[lcd_t.number1_high]);//display digital "temp
 	    
 	   }
-	   else if(run_t.gDry==0 && run_t.gPlasma==0 && run_t.gBug ==1){
+	   else if(run_t.gDry==0 && run_t.gPlasma==0 && run_t.gUltransonic ==1){
 
 	        TM1723_Write_Display_Data(0xC2,((0X01+DRY_NO_Symbol+KILL_NO_Symbol+BUG_Symbol))+lcdNumber1_High[lcd_t.number1_high]);//display digit
 	        
 	   }
-	  else if(run_t.gDry==0 && run_t.gPlasma==0 && run_t.gBug ==0){
+	  else if(run_t.gDry==0 && run_t.gPlasma==0 && run_t.gUltransonic ==0){
 
 	        TM1723_Write_Display_Data(0xC2,0X01+DRY_NO_Symbol+KILL_NO_Symbol+BUG_NO_Symbol+lcdNumber1_High[lcd_t.number1_high]);//display digit
 	       
 	  }
-	  else if(run_t.gDry==1 && run_t.gPlasma==0 && run_t.gBug ==1){
+	  else if(run_t.gDry==1 && run_t.gPlasma==0 && run_t.gUltransonic ==1){
 
 	        TM1723_Write_Display_Data(0xC2,((0X01+DRY_Symbol+KILL_NO_Symbol+BUG_Symbol))+lcdNumber1_High[lcd_t.number1_high]);//display digit
 	       
 	  }
-	  else if(run_t.gDry==1 && run_t.gPlasma==0 && run_t.gBug ==0){
+	  else if(run_t.gDry==1 && run_t.gPlasma==0 && run_t.gUltransonic ==0){
 
 	        TM1723_Write_Display_Data(0xC2,((0X01+DRY_Symbol+KILL_NO_Symbol+BUG_NO_Symbol))+lcdNumber1_High[lcd_t.number1_high]);//display digit
 	       
 	  }
-	  else if(run_t.gDry==0 && run_t.gPlasma==1 && run_t.gBug ==0){
+	  else if(run_t.gDry==0 && run_t.gPlasma==1 && run_t.gUltransonic ==0){
 	   
 			  TM1723_Write_Display_Data(0xC2,((0X01+DRY_NO_Symbol+KILL_Symbol+BUG_NO_Symbol))+lcdNumber1_High[lcd_t.number1_high]);//display digit
 			  
 	 }
-	  else if(run_t.gDry==1 && run_t.gPlasma==1 && run_t.gBug ==0){
+	  else if(run_t.gDry==1 && run_t.gPlasma==1 && run_t.gUltransonic ==0){
 		 
 				TM1723_Write_Display_Data(0xC2,((0X01+DRY_Symbol+KILL_Symbol+BUG_NO_Symbol))+lcdNumber1_High[lcd_t.number1_high]);//display digit
 			
 	   }
 
   
-  // TIM1723_Write_Cmd(LUM_VALUE);
+   TIM1723_Write_Cmd(LUM_VALUE);
    
 }
 /*************************************************************************************
@@ -628,25 +628,25 @@ static void LCD_DisplayNumber_OneTwo_Icon_Handler(void)
      static uint8_t number_blink_times;
 	 if(run_t.gTimer_numbers_one_two_blink < 6  ){ //disp number
 	     //display address 0xC2
-	     if(run_t.gDry ==1 && run_t.gPlasma ==1  && run_t.gBug==1)
+	     if(run_t.gDry ==1 && run_t.gPlasma ==1  && run_t.gUltransonic==1)
 		 	TM1723_Write_Display_Data(0xC2,((0X01+DRY_Symbol+KILL_Symbol+BUG_Symbol)+lcdNumber1_High[lcd_t.number1_high]) & 0xff);//display digital "temp
-         else if(run_t.gDry ==0 && run_t.gPlasma ==1 && run_t.gBug==1)
+         else if(run_t.gDry ==0 && run_t.gPlasma ==1 && run_t.gUltransonic==1)
 		 	TM1723_Write_Display_Data(0xC2,((0X01+KILL_Symbol+BUG_Symbol)+lcdNumber1_High[lcd_t.number1_high]) & 0xff);//display digital "temp
-         else if(run_t.gDry ==0 && run_t.gPlasma ==0 && run_t.gBug==1)
+         else if(run_t.gDry ==0 && run_t.gPlasma ==0 && run_t.gUltransonic==1)
 		 	TM1723_Write_Display_Data(0xC2,(0X01+BUG_Symbol+lcdNumber1_High[lcd_t.number1_high]) & 0xff);//display digital "temp
-		 else if(run_t.gDry ==0 && run_t.gPlasma ==0 && run_t.gBug==0){
+		 else if(run_t.gDry ==0 && run_t.gPlasma ==0 && run_t.gUltransonic==0){
 		 	TM1723_Write_Display_Data(0xC2,(0X01+lcdNumber1_High[lcd_t.number1_high]) & 0xff);//display digital "temp
 		 }
-		 else if(run_t.gDry ==1 && run_t.gPlasma ==1 && run_t.gBug==0){
+		 else if(run_t.gDry ==1 && run_t.gPlasma ==1 && run_t.gUltransonic==0){
 		 	TM1723_Write_Display_Data(0xC2,((0X01+DRY_Symbol+KILL_Symbol)+lcdNumber1_High[lcd_t.number1_high]) & 0xff);//display digital "temp
 		 }
-		 else if(run_t.gDry ==0 && run_t.gPlasma ==1 && run_t.gBug==0){
+		 else if(run_t.gDry ==0 && run_t.gPlasma ==1 && run_t.gUltransonic==0){
 		 	TM1723_Write_Display_Data(0xC2,((0X01+KILL_Symbol)+lcdNumber1_High[lcd_t.number1_high]) & 0xff);//display digital "temp
 		 }
-		 else if(run_t.gDry ==1 && run_t.gPlasma ==0 && run_t.gBug==0){
+		 else if(run_t.gDry ==1 && run_t.gPlasma ==0 && run_t.gUltransonic==0){
 		 	TM1723_Write_Display_Data(0xC2,((0X01+DRY_Symbol)+lcdNumber1_High[lcd_t.number1_high]) & 0xff);//display digital "temp
 		 }
-		 else if(run_t.gDry ==1 && run_t.gPlasma ==0 && run_t.gBug==1){
+		 else if(run_t.gDry ==1 && run_t.gPlasma ==0 && run_t.gUltransonic==1){
 		 	TM1723_Write_Display_Data(0xC2,((0X01+DRY_Symbol+BUG_Symbol)+lcdNumber1_High[lcd_t.number1_high]) & 0xff);//display digital "temp
 		 }
 		 //display addres 0xC3 -> AI icon
@@ -662,25 +662,25 @@ static void LCD_DisplayNumber_OneTwo_Icon_Handler(void)
 	 	 }//don't Display numbers
 		 else if(run_t.gTimer_numbers_one_two_blink > 5  && run_t.gTimer_numbers_one_two_blink <11){ //don't display 
             //display address 0xC2 -> 
-	          if(run_t.gDry ==1 && run_t.gPlasma ==1  && run_t.gBug==1)
+	          if(run_t.gDry ==1 && run_t.gPlasma ==1  && run_t.gUltransonic==1)
 			 	TM1723_Write_Display_Data(0xC2,((0X01+DRY_Symbol+KILL_Symbol+BUG_Symbol)+lcdNumber1_High[lcd_t.number1_high]) & 0x0f);//display digital "temp
-	         else if(run_t.gDry ==0 && run_t.gPlasma ==1 && run_t.gBug==1)
+	         else if(run_t.gDry ==0 && run_t.gPlasma ==1 && run_t.gUltransonic==1)
 			 	TM1723_Write_Display_Data(0xC2,((0X01+KILL_Symbol+BUG_Symbol)+lcdNumber1_High[lcd_t.number1_high]) & 0x0f);//display digital "temp
-	         else if(run_t.gDry ==0 && run_t.gPlasma ==0 && run_t.gBug==1)
+	         else if(run_t.gDry ==0 && run_t.gPlasma ==0 && run_t.gUltransonic==1)
 			 	TM1723_Write_Display_Data(0xC2,((0X01+BUG_Symbol)+lcdNumber1_High[lcd_t.number1_high]) & 0x0f);//display digital "temp
-			 else if(run_t.gDry ==0 && run_t.gPlasma ==0 && run_t.gBug==0){
+			 else if(run_t.gDry ==0 && run_t.gPlasma ==0 && run_t.gUltransonic==0){
 			 	TM1723_Write_Display_Data(0xC2,((0X01)+lcdNumber1_High[lcd_t.number1_high]) & 0x0f);//display digital "temp
 			 }
-			 else if(run_t.gDry ==1 && run_t.gPlasma ==1 && run_t.gBug==0){
+			 else if(run_t.gDry ==1 && run_t.gPlasma ==1 && run_t.gUltransonic==0){
 			 	TM1723_Write_Display_Data(0xC2,((0X01+DRY_Symbol+KILL_Symbol)+lcdNumber1_High[lcd_t.number1_high]) & 0x0f);//display digital "temp
 			 }
-			 else if(run_t.gDry ==0 && run_t.gPlasma ==1 && run_t.gBug==0){
+			 else if(run_t.gDry ==0 && run_t.gPlasma ==1 && run_t.gUltransonic==0){
 			 	TM1723_Write_Display_Data(0xC2,((0X01+KILL_Symbol)+lcdNumber1_High[lcd_t.number1_high]) & 0x0f);//display digital "temp
 			 }
-			 else if(run_t.gDry ==1 && run_t.gPlasma ==0 && run_t.gBug==0){
+			 else if(run_t.gDry ==1 && run_t.gPlasma ==0 && run_t.gUltransonic==0){
 			 	TM1723_Write_Display_Data(0xC2,((0X01+DRY_Symbol)+lcdNumber1_High[lcd_t.number1_high]) & 0x0f);//display digital "temp
 			 }
-			 else if(run_t.gDry ==1 && run_t.gPlasma ==0 && run_t.gBug==1){
+			 else if(run_t.gDry ==1 && run_t.gPlasma ==0 && run_t.gUltransonic==1){
 			 	TM1723_Write_Display_Data(0xC2,((0X01+DRY_Symbol+BUG_Symbol)+lcdNumber1_High[lcd_t.number1_high]) & 0x0f);//display digital "temp
 			 }
 			 

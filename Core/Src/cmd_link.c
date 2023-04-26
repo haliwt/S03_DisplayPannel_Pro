@@ -189,29 +189,31 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         case 3:
 
             switch(run_t.single_data){
-             case PANEL_DATA:
+             case PANEL_DATA://1
                  run_t.gReal_humtemp[0]=inputBuf[0]; //Humidity value 
                  state = 4;  
             break;
-            case WIFI_INFO :
-                  if(inputBuf[0]==0x01)
+            case WIFI_INFO ://2
+                  if(inputBuf[0]==0x01){
                      run_t.wifi_connect_flag =1;
-                   else 
+				     
+                  }
+                  else if(inputBuf[0]==0x0)
                      run_t.wifi_connect_flag =0;
                  
-                    run_t.decodeFlag=1; 
+                    run_t.decodeFlag=0; 
                     state=0;
-                  //  run_t.decodeFlag=1;
+                 
              
             break;
 
-            case WIFI_REAL_TEMP : //wifi modify temperature of value
+            case WIFI_REAL_TEMP ://3 //wifi modify temperature of value
                  run_t.wifi_set_temperature=inputBuf[0]; 
                  state=0;
                  run_t.decodeFlag=1;
             break;
 
-            case WIFI_CMD:
+            case WIFI_CMD://5
                  run_t.wifiCmd[0] =inputBuf[0];
                  state=0;
                  run_t.decodeFlag=1; 

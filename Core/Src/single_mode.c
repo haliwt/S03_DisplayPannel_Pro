@@ -319,9 +319,11 @@ void Process_Key_Handler(uint8_t keylabel)
         run_t.gModel =0; //WT.EDIT 2022.09.01
 		run_t.gPlasma=0;
 		run_t.gDry =0;
-		run_t.gBug =0;
+		run_t.gUltransonic =0;
 		
-		run_t.wifi_led_fast_blink_flag=0;
+		 run_t.wifi_led_fast_blink_flag=0;
+		
+			
       
 		run_t.timer_timing_define_flag = timing_not_definition;
 
@@ -359,7 +361,7 @@ static void Power_On_Fun(void)
 	run_t.gModel =1; //WT.EDIT 2022.09.01
 	run_t.gPlasma=1;
 	run_t.gDry =1;
-	run_t.gBug =1;
+	run_t.gUltransonic =1;
 	
 	run_t.temperature_set_flag = 0; //WT.EDIT 2023.01.31
     run_t.setup_temperature_value=0; // //WT.EDIT 2023.01.31
@@ -824,7 +826,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 	 	 Receive_Wifi_Cmd(run_t.wifiCmd[0]);
 	 break;
 
-	 case  WIFI_WIND_SPEED:
+	 case  WIFI_WIND_SPEED://6
 	 	if(run_t.gPower_On ==1){
 		  
 
@@ -850,7 +852,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 	  
 	 break;
 
-	 case WIFI_REAL_TEMP: //set temperature value
+	 case WIFI_REAL_TEMP: //4//set temperature value
 	       if(run_t.gPower_On ==1){
 		   	   
 
@@ -871,7 +873,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 
 	 break;
 
-	 case PANEL_DATA:
+	 case PANEL_DATA://1
 	   
         if(run_t.gPower_On ==1){
         hum1 =  run_t.gReal_humtemp[0]/10 ;  //Humidity 
@@ -900,7 +902,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 
       break;
 
-       case WIFI_BEIJING_TIME: //run_t.wifi_connect_flag
+       case WIFI_BEIJING_TIME: //7//run_t.wifi_connect_flag
          if(run_t.gPower_On==1){
            if(run_t.timer_timing_define_flag==timing_not_definition ){
 			 lcd_t.number5_low=(run_t.dispTime_hours ) /10;
@@ -927,7 +929,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
  
       break;
 
-      case WIFI_SET_TIMING:
+      case WIFI_SET_TIMING://10
         
         if(run_t.dispTime_hours !=0){
             run_t.timer_timing_define_flag = timing_success ;
@@ -951,7 +953,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 
       break;
 
-	  case WIFI_SET_TEMPERATURE:
+	  case WIFI_SET_TEMPERATURE://11
 
 	  		if(run_t.gPower_On ==1){
 
@@ -1009,7 +1011,10 @@ void Receive_Wifi_Cmd(uint8_t cmd)
 		 	
             //  single_buzzer_fun();
               run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
+	         
+		 
               Power_On_Fun();
+		      run_t.wifi_connect_flag =1;
             //  HAL_Delay(200);
 			  cmd=0xff;
 
@@ -1017,7 +1022,7 @@ void Receive_Wifi_Cmd(uint8_t cmd)
 
 			 case WIFI_POWER_OFF: //turn off 
                 
-			    //single_buzzer_fun();
+			   run_t.wifi_connect_flag =1;
 			   run_t.wifi_send_buzzer_sound = WIFI_POWER_OFF_ITEM;
 				
 			    Power_Off_Fun();
@@ -1082,19 +1087,19 @@ void Receive_Wifi_Cmd(uint8_t cmd)
 			 case WIFI_SONIC_ON:  //drive bug
 		
 				 if(run_t.gPower_On==1){		   
-				  run_t.gBug =1; //turn on 
+				  run_t.gUltransonic =1; //turn on 
 			
 				 run_t.gFan_RunContinue =0;
-                   //  HAL_Delay(200);
+                
 			    }
 
 			 break;
 
 			 case WIFI_SONIC_OFF: //drive bug turn off
 			 	if(run_t.gPower_On==1){
-				    run_t.gBug=0;
+				    run_t.gUltransonic=0;
 					run_t.gFan_RunContinue =0;
-                   // HAL_Delay(200);
+                   
 			   }
 			 break;
 
