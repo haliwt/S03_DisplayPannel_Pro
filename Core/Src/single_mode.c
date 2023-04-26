@@ -1035,14 +1035,14 @@ void Receive_Wifi_Cmd(uint8_t cmd)
 			case WIFI_MODE_1: //AI turn on -> AI icon display 
                 if(run_t.gPower_On==1){
 				     run_t.gModel =1; //0-> has ,1->no gModel
-                   // HAL_Delay(200);
+                  
                 	} 
 			break;
 
 			 case WIFI_MODE_2: //icon don't display 
                  if(run_t.gPower_On==1){
 				   run_t.gModel =2; //turon off AI mode
-                    // HAL_Delay(200);
+                    
 			 	   
                  }
              break;
