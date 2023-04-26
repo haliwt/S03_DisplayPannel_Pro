@@ -128,6 +128,7 @@ void Process_Key_Handler(uint8_t keylabel)
 
 	  case model_long_key:
 	  	if(run_t.gPower_On ==1){
+		  //  SendData_Buzzer();
 			run_t.gModel=0;
 		   run_t.setup_timer_timing_item=1;//run_t.gModel =2;
 		   run_t.display_set_timer_timing  =timer_time;
@@ -135,7 +136,11 @@ void Process_Key_Handler(uint8_t keylabel)
 		   set_timer_flag=0;
            display_model =1;
 		   run_t.Timer_mode_flag=1;
-		   SendData_Buzzer();
+		   
+		   
+		   SendData_Set_Wifi(MODE_TIMER);
+		   HAL_Delay(50);
+		   
 	  	 }
 	  break;
 
