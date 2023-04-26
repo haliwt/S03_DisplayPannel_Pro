@@ -98,13 +98,15 @@ void Process_Key_Handler(uint8_t keylabel)
 
 	  case model_key:
 		if(run_t.gPower_On ==1){
-			SendData_Buzzer();
+			//SendData_Buzzer();
 
 		   if(run_t.display_set_timer_timing == beijing_time){
 		
                //timer time + don't has ai item
                run_t.display_set_timer_timing = timer_time;
 			   run_t.gModel=0;
+		      SendData_Set_Wifi(MODE_TIMER);
+			  HAL_Delay(50);
                
 		   	}
 		    else if(run_t.display_set_timer_timing == timer_time){
@@ -112,6 +114,8 @@ void Process_Key_Handler(uint8_t keylabel)
                 run_t.display_set_timer_timing = beijing_time;
              
 	           run_t.gModel=1;
+			  SendData_Set_Wifi(MODE_AI);
+			  HAL_Delay(50);
 				
 			}
 			
