@@ -629,14 +629,14 @@ void RunPocess_Command_Handler(void)
 		   run_t.setup_timer_flag++;
 
 	       SendData_Time_Data(run_t.dispTime_hours);
-		 HAL_Delay(200);
+		  HAL_Delay(200);
 
 
 	  }
         
 		
        //Enable digital "1,2" -> blink LED
-        //Enable digital "1,2" -> blink LED
+       //Enable digital "1,2" -> blink LED
 	   if(run_t.panel_key_setup_timer_flag==1){
            run_t.panel_key_setup_timer_flag=0;
 		   key_set_temp_flag =1;
@@ -660,11 +660,9 @@ void RunPocess_Command_Handler(void)
 		
 			
 		}
+	   
 	   //set up temparature value 
-	  
-
-
-          if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay > 61){
+	  if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay > 61){
                run_t.gTimer_temp_delay =0;
 		 
 		  
@@ -690,9 +688,7 @@ void RunPocess_Command_Handler(void)
 	 
    
    //receive from mainboard data 
-
-   
-    //displayPannel set temperature vale to main board value 
+   //displayPannel set temperature vale to main board value 
     if(run_t.gTimer_set_temp_times >9 && run_t.gPower_On==1){ // 4s
 	     run_t.gTimer_set_temp_times=0;
 		 if(run_t.wifi_set_temperature==0)run_t.wifi_set_temperature=20;
@@ -1034,15 +1030,40 @@ void Receive_Wifi_Cmd(uint8_t cmd)
 
 			case WIFI_MODE_1: //AI turn on -> AI icon display 
                 if(run_t.gPower_On==1){
-				     run_t.gModel =1; //0-> has ,1->no gModel
-                  
-                	} 
+			
+					if(run_t.display_set_timer_timing == beijing_time){
+
+					//timer time + don't has ai item
+					run_t.display_set_timer_timing = timer_time;
+					run_t.gModel=0;
+
+					}
+					else if(run_t.display_set_timer_timing == timer_time){
+					//beijing time + ai item
+					run_t.display_set_timer_timing = beijing_time;
+
+					run_t.gModel=1;
+
+					}
+		    	}
 			break;
 
 			 case WIFI_MODE_2: //icon don't display 
                  if(run_t.gPower_On==1){
-				   run_t.gModel =2; //turon off AI mode
-                    
+					  if(run_t.display_set_timer_timing == beijing_time){
+
+						//timer time + don't has ai item
+						run_t.display_set_timer_timing = timer_time;
+						run_t.gModel=0;
+
+						}
+						else if(run_t.display_set_timer_timing == timer_time){
+						//beijing time + ai item
+						run_t.display_set_timer_timing = beijing_time;
+
+						run_t.gModel=1;
+
+						}
 			 	   
                  }
              break;
