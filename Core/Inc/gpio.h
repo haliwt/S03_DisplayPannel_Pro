@@ -39,7 +39,7 @@ extern "C" {
 void MX_GPIO_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+#define VK36N4D_INT_GPIO()     HAL_GPIO_ReadPin(VK36N4D_INT_GPIO_Port,VK36N4D_INT_Pin)
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

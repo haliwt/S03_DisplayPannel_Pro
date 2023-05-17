@@ -22,7 +22,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "run.h"
 /* USER CODE END 0 */
 
 /*----------------------------------------------------------------------------*/
@@ -70,25 +70,33 @@ void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins input : PB2 PB10 PB11 PB12 */
-  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12;
+  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_11|GPIO_PIN_12;//|GPIO_PIN_10
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN ;//GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 
 
-//   /*Configure GPIO pin Exit interrupt : PA2 */
-//  GPIO_InitStruct.Pin = GPIO_PIN_2;
-//  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-//  GPIO_InitStruct.Pull = GPIO_NOPULL;
-//  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-//
-//  /* EXTI interrupt init*/
-//  HAL_NVIC_SetPriority(EXTI2_3_IRQn, 4, 4);
-//  HAL_NVIC_EnableIRQ(EXTI2_3_IRQn);
+   /*Configure GPIO pin Exit interrupt : PA2 */
+  GPIO_InitStruct.Pin = KEY_POWER_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;//GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI4_15_IRQn, 1, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);
 
 }
 
 /* USER CODE BEGIN 2 */
+//void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
+//{
+//    if(GPIO_Pin==VK36N4D_INT_Pin){
+//		
+//      run_t.vk36n4d_interrupt_flag =1;
+//
+//   }
+//}
 
 /* USER CODE END 2 */

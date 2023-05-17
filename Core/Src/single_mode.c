@@ -53,8 +53,8 @@ void Process_Key_Handler(uint8_t keylabel)
     switch(keylabel){
 
       case power_key:
-	      power_on_flag_times = power_on_flag_times ^ 0x01;
-          if(power_on_flag_times==1){
+	      
+          if(run_t.gPower_On == 0 || run_t.gPower_On == 0xff){
          
  			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
 		 	  SendData_PowerOnOff(1);
@@ -347,8 +347,11 @@ void Process_Key_Handler(uint8_t keylabel)
 
    
 		if(run_t.wifi_send_buzzer_sound != WIFI_POWER_OFF_ITEM){
-                SendData_PowerOnOff(0);
-            HAL_Delay(300);
+			
+			
+               SendData_PowerOnOff(0);
+               HAL_Delay(300);
+			
 
         }
 		
@@ -753,7 +756,7 @@ void RunPocess_Command_Handler(void)
   
         }
 
-   if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff ){
+   if((run_t.gPower_On ==0 || run_t.gPower_On == 0xff) && run_t.wifi_send_buzzer_sound != WIFI_POWER_ON_ITEM){
 	 	
 	      Breath_Led();
 	      run_t.gPower_On =0xff;
@@ -1014,13 +1017,11 @@ void Receive_Wifi_Cmd(uint8_t cmd)
 
 		   case WIFI_POWER_ON: //turn on 
 		 	
-            //  single_buzzer_fun();
+           
               run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
-	         
-		 
-              Power_On_Fun();
+	          Power_On_Fun();
 		      run_t.wifi_connect_flag =1;
-            //  HAL_Delay(200);
+         
 			  cmd=0xff;
 
 	         break;

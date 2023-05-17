@@ -112,36 +112,37 @@ int main(void)
     /* USER CODE END WHILE */
            
     /* USER CODE BEGIN 3 */
-    if(run_t.power_times == 0){
-          run_t.power_times=1;
-		  HAL_Delay(500);
-	      run_t.gPower_On=0;
-		  
-	  }
-	  else{
+      
+    switch(run_t.power_times){
         
-       
-			
-		if(run_t.decodeFlag ==1){
+        case 0:
+    
+         
+		  HAL_Delay(3000);
+	      run_t.gPower_On=0;
+          run_t.power_times++;
+		  
+	  
+      break;
+      
+      case 1:
+	 
+          if(run_t.decodeFlag ==1){
 			  run_t.decodeFlag =0;
 			  run_t.process_run_guarantee_flag=1;
              Decode_Function();
                 
            }
-          
-   			key_read_value  = KEY_Scan();
-   
-             Process_Key_Handler(key_read_value);
-			  
-	         RunPocess_Command_Handler();
-             USART1_Cmd_Error_Handler();
-                
-                
-            
 		  
-      }
+			key_read_value  = KEY_Scan();
+			Process_Key_Handler(key_read_value);
+			RunPocess_Command_Handler();
+			USART1_Cmd_Error_Handler();
+			
+                
+          break;
       
-   
+         }
   }
   /* USER CODE END 3 */
 }
